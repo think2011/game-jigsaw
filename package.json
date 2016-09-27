@@ -1,0 +1,7 @@
+{
+  "name": "application-name",
+  "scripts": {
+    "dev": "browser-sync start --server --files='**/*.css, **/*.jsp, **/*.html, **/*.js'"
+  },
+  "version": "0.0.1"
+}

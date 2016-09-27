@@ -1,0 +1,28 @@
+@import "mixin";
+@import "animate";
+@import "../js/lib/animate.css";
+@import "../js/lib/hotcss.scss";
+@import "app.scss";
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #eee;
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
