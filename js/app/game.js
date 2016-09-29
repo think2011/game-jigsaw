@@ -1,8 +1,9 @@
 define(['tools'], function (tools) {
     var Class = function () {
-        this.sizeX   = 3
-        this.sizeY   = 3
-        this.axisBox = []
+        this.$backdrop = $('.backdrop')
+        this.sizeX     = 3
+        this.sizeY     = 3
+        this.axisBox   = []
 
         this.init()
     }
@@ -30,7 +31,7 @@ define(['tools'], function (tools) {
                 var height     = that.toRem(img.naturalHeight)
                 var unit       = 'rem'
                 var $container = $('<div class="jigsaw-container"></div>')
-
+                var $preview   = $('<div class="preview"><img src="' + picUrl + '" alt=""></div>')
 
                 $container.css({width: width + unit, height: height + unit})
 
@@ -63,13 +64,27 @@ define(['tools'], function (tools) {
                     }
                 }
 
-                $('body').append($container)
+                $('body').append($container).append($preview)
 
                 setTimeout(function () {
-                    // that.shuffle()
-                }, 0)
+                    that.shuffle(function () {
+                        setTimeout(function () {
+                            $preview.addClass('show')
+                        }, 700)
+                    })
+                }, 500)
 
-                $('#shuffle').on('click', function () {
+                $preview.on('tap', function () {
+                    if ($preview.hasClass('show-all')) {
+                        $preview.removeClass('show-all')
+                        that.$backdrop.removeClass('active')
+                    } else {
+                        $preview.addClass('show-all')
+                        that.$backdrop.addClass('active')
+                    }
+                })
+
+                $('#shuffle').on('tap', function () {
                     that.shuffle()
                 })
             }
@@ -77,14 +92,19 @@ define(['tools'], function (tools) {
             img.src = picUrl
         },
 
-        shuffle: function () {
+        shuffle: function (cb) {
             var that       = this
             var $container = $('.jigsaw-container')
             var $img       = $container.find('.img')
             var unit       = 'rem'
-            var sortArray  = this.axisBox.slice(0).sort(function () {
-                return Math.random() - 0.5
-            })
+            var sortArray  = this.axisBox.slice(0)
+                .sort(function () {
+                    return Math.random() - 0.5
+                }).sort(function () {
+                    return Math.random() - 0.5
+                }).sort(function () {
+                    return Math.random() - 0.5
+                })
             var animations = [
                 'tada',
                 'wobble',
@@ -103,10 +123,12 @@ define(['tools'], function (tools) {
                 (function () {
                     setTimeout(function () {
                         $(v).css({
-                            left: sortArray[k][0] + unit,
-                            top : sortArray[k][1] + unit,
+                            left  : sortArray[k][0] + unit,
+                            top   : sortArray[k][1] + unit,
                             border: that.toRem(2) + unit + ' solid #fff'
                         })
+
+                        cb && cb()
                     }, 500)
                 })()
             })

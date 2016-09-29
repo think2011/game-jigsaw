@@ -7,10 +7,6 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  -webkit-appearance: none;
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  -webkit-transform-style: preserve-3d;
 
   &:focus {
     outline: none;
