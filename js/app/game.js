@@ -12,7 +12,14 @@ define(['tools'], function (tools) {
         construct: Class,
 
         init: function () {
+            var that = this
+
             this.render('./img/pic.jpg', this.sizeX, this.sizeY)
+
+            this.$backdrop.on('tap', function () {
+                $('.preview').removeClass('show-all')
+                that.$backdrop.removeClass('active')
+            })
         },
 
         toRem: function (px) {
