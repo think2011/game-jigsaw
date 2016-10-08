@@ -1,13 +1,14 @@
 require.config({
     baseUrl: './js',
     paths  : {
-        tools    : 'tools/tools',
-        Fastclick: 'lib/fastclick',
+        tools           : 'tools/tools',
+        Fastclick       : 'lib/fastclick',
+        collisionChecker: 'lib/collisionChecker.min',
+        Dragify         : 'lib/Dragify.min',
 
         game: 'app/game'
     },
-    shim   : {
-    },
+    shim   : {},
     map    : {
         '*': {
             'css': 'lib/css.min'

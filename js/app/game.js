@@ -1,9 +1,10 @@
-define(['tools'], function (tools) {
+define(['tools', 'Dragify', 'collisionChecker'], function (tools, Dragify, collisionChecker) {
     var Class = function () {
-        this.$backdrop = $('.backdrop')
-        this.sizeX     = 3
-        this.sizeY     = 3
-        this.axisBox   = []
+        this.$backdrop     = $('.backdrop')
+        this.sizeX         = 3
+        this.sizeY         = 3
+        this.axisBox       = []
+        this.originAxisBox = []
 
         this.init()
     }
@@ -19,6 +20,10 @@ define(['tools'], function (tools) {
             this.$backdrop.on('tap', function () {
                 $('.preview').removeClass('show-all')
                 that.$backdrop.removeClass('active')
+            })
+
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault()
             })
         },
 
@@ -66,11 +71,30 @@ define(['tools'], function (tools) {
                             padding            : '100%' // 解决奇怪的间隙问题
                         })
 
+                        new Dragify($html[0])
+                            .on('move', function () {
+                                console.log($html[0].getBoundingClientRect().top,
+                                    $container.find('.img')[1].getBoundingClientRect().top
+                                )
+
+                                /*    $container.find('.img').each(function (k, v) {
+                                 if (v === $html[0]) return
+
+                                 if (
+                                 $html[0].getBoundingClientRect().left === v.getBoundingClientRect().left &&
+                                 $html[0].getBoundingClientRect().top === v.getBoundingClientRect().top
+                                 ) {
+                                 }
+                                 })*/
+                            })
+
+                        $html.data('position', [params.x, params.y])
                         that.axisBox.push([params.x, params.y])
                         $container.append($html)
                     }
                 }
 
+                that.originAxisBox = that.axisBox.slice()
                 $('body').append($container).append($preview)
 
                 setTimeout(function () {
@@ -92,11 +116,23 @@ define(['tools'], function (tools) {
                 })
 
                 $('#shuffle').on('tap', function () {
-                    that.shuffle()
+                    that.swap($('.jigsaw-container').find('.img').eq(0), $('.jigsaw-container').find('.img').eq(1))
                 })
             }
 
             img.src = picUrl
+        },
+
+        swap: function ($elem, $target) {
+            var elemTop     = $elem.css('top')
+            var elemLeft    = $elem.css('left')
+            var $targetTop  = $target.css('top')
+            var $targetLeft = $target.css('left')
+
+            $elem.css('top', $targetTop)
+            $elem.css('left', $targetLeft)
+            $target.css('top', elemTop)
+            $target.css('left', elemLeft)
         },
 
         shuffle: function (cb) {
