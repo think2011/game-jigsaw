@@ -1,21 +1,20 @@
 define(['tools', 'Dragify', 'collisionChecker'], function (tools, Dragify, collisionChecker) {
-    var Class = function () {
-        this.$backdrop     = $('.backdrop')
-        this.sizeX         = 3
-        this.sizeY         = 3
-        this.axisBox       = []
-        this.originAxisBox = []
+    var Class = function (picUrl) {
+        this.$backdrop = $('.backdrop')
+        this.sizeX     = 3
+        this.sizeY     = 3
+        this.axisBox   = []
 
-        this.init()
+        this.init(picUrl)
     }
 
     Class.prototype = {
         construct: Class,
 
-        init: function () {
+        init: function (picUrl) {
             var that = this
 
-            this.render('./img/pic.jpg', this.sizeX, this.sizeY)
+            this.render(picUrl, this.sizeX, this.sizeY)
 
             this.$backdrop.on('tap', function () {
                 $('.preview').removeClass('show-all')
@@ -71,30 +70,11 @@ define(['tools', 'Dragify', 'collisionChecker'], function (tools, Dragify, colli
                             padding            : '100%' // 解决奇怪的间隙问题
                         })
 
-                        new Dragify($html[0])
-                            .on('move', function () {
-                                console.log($html[0].getBoundingClientRect().top,
-                                    $container.find('.img')[1].getBoundingClientRect().top
-                                )
-
-                                /*    $container.find('.img').each(function (k, v) {
-                                 if (v === $html[0]) return
-
-                                 if (
-                                 $html[0].getBoundingClientRect().left === v.getBoundingClientRect().left &&
-                                 $html[0].getBoundingClientRect().top === v.getBoundingClientRect().top
-                                 ) {
-                                 }
-                                 })*/
-                            })
-
-                        $html.data('position', [params.x, params.y])
                         that.axisBox.push([params.x, params.y])
                         $container.append($html)
                     }
                 }
 
-                that.originAxisBox = that.axisBox.slice()
                 $('body').append($container).append($preview)
 
                 setTimeout(function () {
@@ -114,25 +94,36 @@ define(['tools', 'Dragify', 'collisionChecker'], function (tools, Dragify, colli
                         that.$backdrop.addClass('active')
                     }
                 })
-
-                $('#shuffle').on('tap', function () {
-                    that.swap($('.jigsaw-container').find('.img').eq(0), $('.jigsaw-container').find('.img').eq(1))
-                })
             }
 
             img.src = picUrl
         },
 
         swap: function ($elem, $target) {
-            var elemTop     = $elem.css('top')
-            var elemLeft    = $elem.css('left')
-            var $targetTop  = $target.css('top')
-            var $targetLeft = $target.css('left')
+            var that           = this
+            var elemIndex      = $elem.data('index')
+            var targetIndex    = $target.data('index')
+            var originPosition = that.originPosition
+            var targetPosition = $target[0].getBoundingClientRect()
 
-            $elem.css('top', $targetTop)
-            $elem.css('left', $targetLeft)
-            $target.css('top', elemTop)
-            $target.css('left', elemLeft)
+            this.move($target, that.originPosition)
+            this.originPosition = targetPosition
+            $elem.data('index', targetIndex)
+            $target.data('index', elemIndex)
+        },
+
+        move: function ($target, position) {
+            $target[0].moving = true
+            $target[0].classList.add('moving')
+            $target.css({
+                top : position.top - ($target[0].offsetParent.offsetTop || 0),
+                left: position.left - ($target[0].offsetParent.offsetLeft || 0)
+            })
+
+            setTimeout(function () {
+                $target[0].moving = false
+                $target[0].classList.remove('moving')
+            }.bind(this), 500)
         },
 
         shuffle: function (cb) {
@@ -140,14 +131,7 @@ define(['tools', 'Dragify', 'collisionChecker'], function (tools, Dragify, colli
             var $container = $('.jigsaw-container')
             var $img       = $container.find('.img')
             var unit       = 'rem'
-            var sortArray  = this.axisBox.slice(0)
-                .sort(function () {
-                    return Math.random() - 0.5
-                }).sort(function () {
-                    return Math.random() - 0.5
-                }).sort(function () {
-                    return Math.random() - 0.5
-                })
+            var positions  = []
             var animations = [
                 'tada',
                 'wobble',
@@ -159,22 +143,64 @@ define(['tools', 'Dragify', 'collisionChecker'], function (tools, Dragify, colli
             })
 
             $img.each(function (k, v) {
-                $(v).removeClass()
-                    .css('padding', 0)
-                    .addClass('img animated ' + animations[0]);
+                var $v = $(v)
 
-                (function () {
-                    setTimeout(function () {
-                        $(v).css({
-                            left  : sortArray[k][0] + unit,
-                            top   : sortArray[k][1] + unit,
-                            border: that.toRem(2) + unit + ' solid #fff'
+                $v.removeClass()
+                    .css({
+                        padding: 0,
+                        border : that.toRem(2) + unit + ' solid #fff'
+                    })
+                    .addClass('img animated ' + animations[0])
+
+                positions.push({
+                    left : $v.css('left'),
+                    top  : $v.css('top'),
+                    index: k
+                });
+            })
+
+
+            positions.sort(function () {
+                return Math.random() - .5
+            }).sort(function () {
+                return Math.random() - .5
+            }).sort(function () {
+                return Math.random() - .5
+            })
+            setTimeout(function () {
+                $img.each(function (k, v) {
+                    var $v       = $(v)
+                    var position = positions.shift()
+
+                    $v
+                        .data('order', k)
+                        .data('index', position.index)
+                        .css({
+                            left: position.left,
+                            top : position.top
                         })
 
-                        cb && cb()
-                    }, 500)
-                })()
-            })
+                    new Dragify(v)
+                        .on('start', function (current) {
+                            that.originPosition = current.getBoundingClientRect()
+                        })
+                        .on('move', function (current) {
+                            $container.find('.img').each(function (k, v) {
+                                if (v === current || v.moving) return
+
+                                if (collisionChecker(v).hit) {
+                                    that.swap($(current), $(v))
+                                }
+                            })
+                        })
+                        .on('end', function (current) {
+                            that.move($(current), that.originPosition)
+                        })
+                })
+
+
+                cb && cb()
+            }, 500)
         }
     }
 

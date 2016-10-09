@@ -18,5 +18,5 @@ require.config({
 
 
 require(['game', 'tools'], function (game, tools) {
-    new game()
+    new game(window.GAME_PARAMS.items[0])
 })
