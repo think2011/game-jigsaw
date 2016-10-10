@@ -7,24 +7,63 @@
 </head>
 <body>
 
+<div id="scene1">
+    <button class="start">开始游戏</button>
+    <button class="rule">规则</button>
+</div>
+
+<div id="scene2">
+    <div class="countdown"></div>
+    <div class="jigsaw"></div>
+    <div class="preview"><img alt=""></div>
+</div>
 
 <div class="backdrop"></div>
+
 <!-- 公共引用 -->
-<script>
-    window.GAME_PARAMS = {
-        items: [
-            './img/pic.jpg',
-            'http://gd1.alicdn.com/imgextra/i1/401746572/TB2M2blXbMc61BjSZFhXXc6IpXa_!!401746572.jpg_640x640.jpg',
-        ]
-    }
-</script>
 <script src="js/lib/hotcss.js"></script>
 <script src="js/lib/zepto.js"></script>
 <script src="js/lib/touch.js"></script>
 <link rel="stylesheet" href="js/lib/dialog/game-dialog.css">
 <script src="js/lib/dialog/game-dialog.js"></script>
 
-<!-- 应用入口 -->
-<script data-main="js/main" src="./js/lib/require.js"></script>
+<script src="js/lib/Watcher.js"></script>
+<script src="js/tools/tools.js"></script>
+<script src="js/lib/collisionChecker.js"></script>
+<script src="js/lib/Dragify.js"></script>
+<script src="js/lib/Countdown.js"></script>
+
+<script>
+    window.GAME_PARAMS = {
+        items: [
+            'http://gd1.alicdn.com/imgextra/i1/401746572/TB2M2blXbMc61BjSZFhXXc6IpXa_!!401746572.jpg_640x640.jpg',
+        ],
+        time : 3000,
+        sizeX: 3,
+        sizeY: 3
+    }
+
+    var gameWatcher = window.gameWatcher = new Watcher()
+
+    gameWatcher
+            .on('game:ready', function () {
+                console.log('ready')
+            })
+            .on('click:start', function () {
+                gameWatcher.emit('game:play')
+            })
+            .on('click:rule', function () {
+                console.log('rule')
+            })
+            .on('game:win', function () {
+                console.log('win')
+            })
+            .on('game:fail', function () {
+                gameWatcher.emit('game:replay')
+            })
+</script>
+<script src="js/app/Scene1.js"></script>
+<script src="js/app/Scene2.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

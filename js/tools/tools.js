@@ -1,11 +1,5 @@
-define(['Fastclick'], function (FastClick) {
+;(function () {
     // Polyfill
-    if ('addEventListener' in document) {
-        document.addEventListener('DOMContentLoaded', function () {
-            FastClick.attach(document.body);
-        }, false);
-    }
-
     if (typeof Object.assign != 'function') {
         Object.assign = function (target) {
             'use strict';
@@ -27,7 +21,28 @@ define(['Fastclick'], function (FastClick) {
             return target;
         };
     }
-
+    if (typeof Object.create != 'function') {
+        Object.create = (function (undefined) {
+            var Temp = function () {
+            };
+            return function (prototype, propertiesObject) {
+                if (prototype !== Object(prototype) && prototype !== null) {
+                    throw TypeError('Argument must be an object, or null');
+                }
+                Temp.prototype = prototype || {};
+                if (propertiesObject !== undefined) {
+                    Object.defineProperties(Temp.prototype, propertiesObject);
+                }
+                var result     = new Temp();
+                Temp.prototype = null;
+                // to imitate the case of Object.create(null)
+                if (prototype === null) {
+                    result.__proto__ = null;
+                }
+                return result;
+            };
+        })();
+    }
     if (!('remove' in Element.prototype)) {
         Element.prototype.remove = function () {
             if (this.parentNode) {
@@ -89,6 +104,5 @@ define(['Fastclick'], function (FastClick) {
         },
     }
 
-    return new Class()
-})
-
+    window.tools = new Class()
+})()

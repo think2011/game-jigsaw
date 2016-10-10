@@ -1,22 +1,14 @@
-require.config({
-    baseUrl: './js',
-    paths  : {
-        tools           : 'tools/tools',
-        Fastclick       : 'lib/fastclick',
-        collisionChecker: 'lib/collisionChecker.min',
-        Dragify         : 'lib/Dragify.min',
+;(function () {
+    // new Scene1()
 
-        game: 'app/game'
-    },
-    shim   : {},
-    map    : {
-        '*': {
-            'css': 'lib/css.min'
-        }
-    }
-})
+    // new Scene2()
 
+    gameWatcher.on('game:play', function () {
+        new Scene2()
+    })
 
-require(['game', 'tools'], function (game, tools) {
-    new game(window.GAME_PARAMS.items[0])
-})
+    gameWatcher.emit('game:ready')
+
+    // TODO ZH 10/10/16
+    gameWatcher.emit('game:play')
+})()
