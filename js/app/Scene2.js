@@ -79,8 +79,13 @@
 
             var img    = new Image()
             img.onload = function () {
-                var width      = that.toRem(img.naturalWidth)
-                var height     = that.toRem(img.naturalHeight)
+                var size = that.zoomSize({
+                    w:img.naturalWidth,
+                    h:img.naturalHeight,
+                    max:660
+                })
+                var width      = that.toRem(size.w)
+                var height     = that.toRem(size.h)
                 var unit       = that.unit
                 var $container = $('<div class="jigsaw-container"></div>')
 
@@ -123,6 +128,37 @@
             }
 
             img.src = picUrl + '_640x640.jpg_.webp'
+        },
+
+        zoomSize: function (options) {
+            var w = options.w
+            var h = options.h
+            var newW = options.newW
+            var newH = options.newH
+            var max = options.max
+            var result = {w:w,h:h}
+
+            if(newW && newH) {
+                return result
+            }
+            else if (max) {
+                return w > h
+                    ? this.zoomSize({w:w, h:h, newW: max})
+                    : this.zoomSize({w:w, h:h, newH: max})
+            }
+            else if(newW) {
+                result.w =newW
+                result.h = h * (newW / w)
+            }
+            else if (newH) {
+                result.w = w * (newH / h)
+                result.h = newH
+            }
+
+            return {
+                w: Math.ceil(result.w),
+                h: Math.ceil(result.h)
+            }
         },
 
         setCountdown: function () {
