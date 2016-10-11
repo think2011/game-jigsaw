@@ -6,24 +6,56 @@
   position: relative;
   display: none;
 
-  button {
-    &.start {
-      width: px2rem(400);
-      height: px2rem(102);
-      position: absolute;
-      left: px2rem(200);
-      top: px2rem(848);
-      opacity: 0;
-    }
-
-    &.rule {
-      width: px2rem(95);
-      height: px2rem(80);
-      background: seagreen;
-      position: absolute;
-      left: px2rem(656);
-      top: 0;
-      opacity: 0;
-    }
+  .man {
+    width: px2rem(660);
+    height: px2rem(493);
+    background: url("../img/s1-1.png") no-repeat 0 0;
+    background-size: 100%;
+    position: absolute;
+    top: px2rem(178);
+    left:px2rem(60);
+    animation-duration: .7s;
   }
+
+  .title {
+    width: px2rem(659);
+    height: px2rem(182);
+    background: url("../img/s1-2.png") no-repeat 0 0;
+    background-size: 100%;
+    position: absolute;
+    top: px2rem(55);
+    left:px2rem(50);
+    animation-duration: 1s;
+    animation-delay: .4s;
+  }
+
+  .start {
+    width: px2rem(397);
+    height: px2rem(100);
+    background: url("../img/s1-4.png") no-repeat 0 0;
+    background-size: 100%;
+    border:none;
+    position: absolute;
+    top: px2rem(880);
+    left:px2rem(180);
+    animation-duration: .4s;
+    animation-delay: .9s;
+  }
+
+  .rule {
+    width: px2rem(96);
+    height: px2rem(82);
+    background: url("../img/s1-3.png") no-repeat 0 0;
+    background-size: 100%;
+    border:none;
+    position: absolute;
+    top: 0;
+    right:0;
+    animation-duration: .3s;
+    animation-delay: 1.3s;
+  }
+}
+
+#__bs_notify__ {
+  display: none!important;
 }
