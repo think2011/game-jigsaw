@@ -17,11 +17,11 @@
 
             this.$btnStart.on('tap', function () {
                 that.destroy()
-                gameWatcher.emit('click:start')
+                gameWatcher.emit('scene:start')
             })
 
             this.$btnRule.on('tap', function () {
-                gameWatcher.emit('click:rule')
+                gameWatcher.emit('show:rule')
             })
         },
 

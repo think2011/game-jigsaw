@@ -15,6 +15,7 @@
         this.$countdown        = this.$container.find('.countdown')
         this.$preview          = this.$previewContainer.find('img')
         this.$backdrop         = $('.backdrop')
+        this.unit = 'rem'
 
         this.options.items.sort(function () {
             return Math.random() - 0.5
@@ -33,17 +34,16 @@
             that.$container.show()
             gameWatcher.on('game:replay', function () {
                 // TODO ZH 10/10/16
-                that.replay()
+                that.start()
             })
 
-            options.items.push(options.items.shift())
-            this.render(options.items[0], options.sizeX, options.sizeY)
 
-            this.$backdrop.on('tap', function () {
+            this.start()
+     /*       this.$backdrop.on('tap', function () {
                 $('.preview').removeClass('show-all')
                 that.$backdrop.removeClass('active')
             })
-
+*/
             /*
              $preview.on('tap', function () {
              if ($preview.hasClass('show-all')) {
@@ -58,15 +58,17 @@
             document.addEventListener('touchmove', function (e) {
                 e.preventDefault()
             })
-
-        },
-
-        replay: function () {
-
         },
 
         toRem: function (px) {
             return hotcss.px2rem(px, 750)
+        },
+
+        start: function () {
+            var options = this.options
+
+            options.items.push(options.items.shift())
+            this.render(options.items[0], options.sizeX, options.sizeY)
         },
 
         render: function (picUrl, sizeX, sizeY) {
@@ -77,9 +79,9 @@
 
             var img    = new Image()
             img.onload = function () {
-                var width      = that.toRem(660)
+                var width      = that.toRem(img.naturalWidth)
                 var height     = that.toRem(img.naturalHeight)
-                var unit       = 'rem'
+                var unit       = that.unit
                 var $container = $('<div class="jigsaw-container"></div>')
 
                 $container.css({width: width + unit, height: height + unit})
@@ -112,30 +114,28 @@
                     }
                 }
 
-                that.$jigsaw.append($container)
+                that.$jigsaw.empty().append($container)
                 that.$preview.attr('src', picUrl)
 
-                setTimeout(function () {
-                    that.shuffle(function () {
-                        that.setCountdown()
-                        setTimeout(function () {
-                        }, 700)
-                    })
-                }, 500)
+                that.shuffle(function () {
+                    that.setCountdown()
+                })
             }
 
-            img.src = picUrl
+            img.src = picUrl + '_640x640.jpg_.webp'
         },
 
         setCountdown: function () {
             var that      = this
             var countdown = that.countdown = new Countdown(Date.now() + that.options.time)
 
+            this.timeout = false
             countdown
                 .on('countdown', function (time) {
-                    that.$countdown.html(JSON.stringify(time))
+                    that.$countdown.html(time.s)
                 })
                 .on('end', function () {
+                    that.timeout = true
                     that.checkWin()
                 })
         },
@@ -153,36 +153,45 @@
         },
 
         move: function ($target, position, cb) {
+            if($target[0].moving) return
+
+            $target[0].dragify.emit('disabled')
             $target[0].moving = true
             $target[0].classList.add('moving')
-            $target.css({
-                top : position.top - ($target[0].offsetParent.offsetTop || 0),
-                left: position.left - ($target[0].offsetParent.offsetLeft || 0)
-            })
-
-            setTimeout(function () {
+            $target.one('webkitTransitionEnd', function () {
                 $target[0].moving = false
                 $target[0].classList.remove('moving')
-
+                $target[0].dragify.emit('enabled')
                 cb && cb()
-            }.bind(this), 500)
+            })
+
+            $target.css({
+                top : this.toRem(position.top - ($target[0].offsetParent.offsetTop || 0)) +this.unit,
+                left: this.toRem(position.left - ($target[0].offsetParent.offsetLeft || 0)) +this.unit
+            })
         },
 
         checkWin: function () {
-            var win        = true
+            var indexBox = []
+            var orderBox = []
+            var win = false
             var $container = $('.jigsaw-container')
             var $img       = $container.find('.img')
 
-
             $img.each(function (k, v) {
-                if ($(v).data('index') !== $(v).data('order')) {
-                    win = false
-                }
+                indexBox.push($(v).data('index'))
+                orderBox.push($(v).data('order'))
             })
 
-            if (win) {
+            win = indexBox.join() === orderBox.join()
+
+            if(this.timeout && !win) {
+                this.countdown.destroy()
+                gameWatcher.emit('scene:fail')
+            }
+            else if (win) {
                 this.countdown.pause()
-                gameWatcher.emit('game:win')
+                gameWatcher.emit('scene:win')
             }
 
             return win
@@ -204,6 +213,7 @@
                 return Math.random() - .5
             })
 
+            // 生成坐标
             $img.each(function (k, v) {
                 var $v = $(v)
 
@@ -221,18 +231,18 @@
                 });
             })
 
-            positions.sort(function () {
-                return Math.random() - .5
-            }).sort(function () {
-                return Math.random() - .5
-            }).sort(function () {
-                return Math.random() - .5
-            })
-            setTimeout(function () {
+            $img.eq(0).one('webkitAnimationEnd', function () {
+                $img.eq(0)
+
+                // 打乱坐标
+                positions.sort(function () {
+                    return .5 - Math.random()
+                })
+
+                // 准备动画
                 $img.each(function (k, v) {
                     var $v       = $(v)
                     var position = positions.shift()
-
                     $v
                         .data('order', k)
                         .data('index', position.index)
@@ -240,29 +250,34 @@
                             left: position.left,
                             top : position.top
                         })
-
-                    new Dragify(v)
-                        .on('start', function (current) {
-                            that.originPosition = current.getBoundingClientRect()
-                        })
-                        .on('move', function (current) {
-                            $container.find('.img').each(function (k, v) {
-                                if (v === current || v.moving) return
-
-                                if (collisionChecker(v).hit) {
-                                    that.swap($(current), $(v))
-                                }
-                            })
-                        })
-                        .on('end', function (current) {
-                            that.move($(current), that.originPosition, function () {
-                                that.checkWin()
-                            })
-                        })
                 })
 
-                cb && cb()
-            }, 500)
+                // 打乱动画
+                setTimeout(function () {
+                    $img.each(function (k, elem) {
+                        elem.dragify = new Dragify(elem)
+                            .on('start', function (current) {
+                                that.originPosition = current.getBoundingClientRect()
+                            })
+                            .on('move', function (current) {
+                                $container.find('.img').each(function (k, v) {
+                                    if (v === current || v.moving) return
+
+                                    if (collisionChecker(v).hit) {
+                                        that.swap($(current), $(v))
+                                    }
+                                })
+                            })
+                            .on('end', function (current) {
+                                that.move($(current), that.originPosition, function () {
+                                    that.checkWin()
+                                })
+                            })
+                    })
+
+                    cb && cb()
+                },500)
+            })
         }
     }
 

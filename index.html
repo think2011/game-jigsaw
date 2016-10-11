@@ -36,30 +36,50 @@
 <script>
     window.GAME_PARAMS = {
         items: [
-            'http://gd1.alicdn.com/imgextra/i1/401746572/TB2M2blXbMc61BjSZFhXXc6IpXa_!!401746572.jpg_640x640.jpg',
+                'https://gd2.alicdn.com/imgextra/i3/TB1g99GKVXXXXbCapXXYXGcGpXX_M2.SS2',
+            'https://gd3.alicdn.com/imgextra/i3/49752588/TB2HiGVgFXXXXXnXXXXXXXXXXXX_!!49752588.jpg',
         ],
-        time : 3000,
+        time : 15000,
         sizeX: 3,
         sizeY: 3
     }
 
     var gameWatcher = window.gameWatcher = new Watcher()
 
+    /**
+     * 带*的为emit类型
+     *
+     * scene:
+     *   ready 加载完毕
+     *   start 点击开始
+     *   win   通过
+     *   fail  失败
+     *
+     * show:
+     *   rule 规则
+     *
+     * game:
+     *   *play   开始
+     *   *replay 重玩
+     */
     gameWatcher
-            .on('game:ready', function () {
+            .on('scene:ready', function () {
                 console.log('ready')
             })
-            .on('click:start', function () {
+            .on('scene:start', function () {
                 gameWatcher.emit('game:play')
             })
-            .on('click:rule', function () {
+            .on('show:rule', function () {
                 console.log('rule')
             })
-            .on('game:win', function () {
+            .on('scene:win', function () {
                 console.log('win')
+                alert('win')
             })
-            .on('game:fail', function () {
+            .on('scene:fail', function () {
+                console.log('fail')
                 gameWatcher.emit('game:replay')
+                alert('fail')
             })
 </script>
 <script src="js/app/Scene1.js"></script>

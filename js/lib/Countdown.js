@@ -53,12 +53,20 @@
         },
 
         off: function (type, fn) {
-            var event = this._getEvent(type)
+            if(!type) {
+                for (var p in this._events) {
+                    if (!this._events.hasOwnProperty(p)) continue;
 
-            if (!fn) {
-                this._events[type] = []
+                    this.off(p)
+                }
             } else {
-                event.splice(event.indexOf(fn), 1)
+                var event = this._getEvent(type)
+
+                if (!fn) {
+                    this._events[type] = []
+                } else {
+                    event.splice(event.indexOf(fn), 1)
+                }
             }
 
             return this
@@ -71,14 +79,16 @@
     var _day    = _hour * 24
 
     var Class = function (date, countdownMs) {
+        Watcher.call(this)
+
         this.countdownMs = countdownMs || 1000
         this.end         = new Date(date)
-        this.timer       = null
 
+        this.timer = null
         this.init()
     }
 
-    Class.prototype = Object.create(new Watcher)
+    Class.prototype = Object.create(Watcher.prototype)
     Object.assign(Class.prototype, {
         construct: Class,
 
@@ -86,9 +96,9 @@
             var that = this
             var time = that._getTime()
 
+            that.emit('countdown', time)
             if (time.total > 0) {
                 that.timer = setTimeout(function () {
-                    that.emit('countdown', time)
                     that.init()
                 }, that.countdownMs)
             } else {
@@ -105,7 +115,9 @@
         _getTime: function () {
             var that     = this
             var now      = new Date()
-            var distance = that.end - now - 1
+            var distance = that.end - now
+
+            if (distance <= 0) distance = 0
 
             var days    = (distance / _day)
             var hours   = (distance % _day) / _hour
@@ -117,8 +129,8 @@
                 d    : that._padNumber(Math.floor(days), 2),
                 h    : that._padNumber(Math.floor(hours), 2),
                 m    : that._padNumber(Math.floor(minutes), 2),
-                s    : that._padNumber(Math.floor(seconds), 2),
-                ms   : that._padNumber(Math.floor(('' + distance).substr(0, 2)), 2)
+                s    : that._padNumber(Math.ceil(seconds), 2),
+                ms   : that._padNumber(Math.ceil(('' + distance).substr(0, 2)), 2)
             }
         },
 
@@ -137,6 +149,18 @@
 
         start: function () {
             this.init()
+        },
+
+        destroy: function () {
+            this.emit('countdown', {
+                d : '00',
+                h : '00',
+                ms: '00',
+                s : '00'
+            })
+            this.end = 0
+            clearTimeout(this.timer)
+            this.off()
         }
     })
 
