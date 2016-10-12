@@ -57,8 +57,8 @@
             this.start()
         },
 
-        toRem: function (px) {
-            return hotcss.px2rem(px, 750)
+        toRem: function (px, designSize) {
+            return hotcss.px2rem(px, designSize || 750)
         },
 
         start: function () {
@@ -184,7 +184,10 @@
             var that           = this
             var elemIndex      = $elem.data('index')
             var targetIndex    = $target.data('index')
-            var targetPosition = $target[0].getBoundingClientRect()
+            var targetPosition = {
+                top : $target[0].offsetTop,
+                left: $target[0].offsetLeft
+            }
 
             this.move($target, that.originPosition)
             this.originPosition = targetPosition
@@ -206,8 +209,8 @@
             })
 
             $target.css({
-                top : this.toRem(position.top - ($target[0].offsetParent.offsetTop || 0)) + this.unit,
-                left: this.toRem(position.left - ($target[0].offsetParent.offsetLeft || 0)) + this.unit
+                top : this.toRem(position.top, this.$jigsaw.width()) + this.unit,
+                left: this.toRem(position.left, this.$jigsaw.width()) + this.unit
             })
         },
 
@@ -299,7 +302,10 @@
                             .on('start', function (current) {
                                 that.$btnPreview.addClass('inactive')
                                 that.$jigsaw.css('overflow', 'visible')
-                                that.originPosition = current.getBoundingClientRect()
+                                that.originPosition = {
+                                    top : current.offsetTop,
+                                    left: current.offsetLeft
+                                }
                             })
                             .on('move', function (current) {
                                 $container.find('.img').each(function (k, v) {
