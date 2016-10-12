@@ -18,18 +18,18 @@
         construct: AniQueue,
 
         start: function (cb) {
-            var that = this
-            var aniLen = 0
+            var that         = this
+            var aniLen       = 0
             var isExecuteEnd = false
-            var isAniEnd = false
-            var elemTask = that.queue.filter(function (item) {
+            var isAniEnd     = false
+            var elemTask     = that.queue.filter(function (item) {
                 return item.type === 'add'
             })
 
             var finallyCb = function () {
-                if(isAniEnd && isExecuteEnd) {
+                if (isAniEnd && isExecuteEnd) {
                     elemTask.forEach(function (item) {
-                        $(item.params[0]).removeClass(item.params[1]).removeClass('animated').css('animationDuration','')
+                        $(item.params[0]).removeClass(item.params[1]).removeClass('animated').css('animationDuration', '')
                     })
 
                     cb && cb()
@@ -37,9 +37,11 @@
             }
 
             elemTask.forEach(function (item) {
-                var $item =  $(item.params[0])
+                var $item = $(item.params[0])
 
-                if(that.queue.some(function (taskItem) {return taskItem.type === 'hide'})) {
+                if (that.queue.some(function (taskItem) {
+                        return taskItem.type === 'hide'
+                    })) {
                     $item.hide()
                 }
 
@@ -58,19 +60,19 @@
 
         hide: function () {
             this.queue.push({
-                type:'hide'
+                type: 'hide'
             })
 
             return this
         },
 
         _execute: function (cb) {
-            var that = this
-            var task = this.queue.shift()
+            var that   = this
+            var task   = this.queue.shift()
             var params = task.params
 
             var _cb = function () {
-                if(that.queue.length) {
+                if (that.queue.length) {
                     that._execute(cb)
                 } else {
                     cb && cb()
@@ -82,13 +84,12 @@
                     var $elem = $(params[0])
 
                     $elem.show().addClass(params[1]).addClass('animated')
-                    if(params[2] !== undefined) $elem.css('animationDuration', params[2] + 's')
+                    if (params[2] !== undefined) $elem.css('animationDuration', params[2] + 's')
 
                     _cb()
                     break;
 
                 case 'delay':
-                    console.log(params[0] * 1000)
                     setTimeout(_cb, (params[0] * 1000))
                     break;
 
@@ -99,7 +100,7 @@
 
         add: function (selector, animateClass, duration) {
             this.queue.push({
-                type:'add',
+                type  : 'add',
                 params: arguments
             })
 
@@ -109,7 +110,7 @@
 
         delay: function (time) {
             this.queue.push({
-                type:'delay',
+                type  : 'delay',
                 params: arguments
             })
             return this

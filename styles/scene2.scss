@@ -1,11 +1,13 @@
 #scene2 {
   width: 100%;
   height: 100%;
-  //background: #6942eb url("../img/s2-bg.png") no-repeat 0 0;
+  background: url("../img/s2-bg.png") no-repeat 0 0;
   background-size: 100%;
   display: none;
   overflow: hidden;
-  background: seagreen;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   .countdown {
     width: px2rem(480);
@@ -16,8 +18,10 @@
   .jigsaw {
     width: 100%;
     height: px2rem(705);
+    padding-left: px2rem(12);
     display: flex;
     align-items: center;
+    overflow: hidden;
   }
 
   .jigsaw-container {
@@ -29,6 +33,25 @@
     -webkit-backface-visibility: hidden;
     -webkit-transform-style: preserve-3d;
     transform: translate3d(0, 0, 0);
+
+    .preview {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      transition: .25s ease;
+      border: 3px solid #fff;
+      margin: 0 auto;
+      transform: translate(0, 150%) scale(.3);
+      opacity: 0;
+
+      &.active {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+    }
   }
 
   .img {
@@ -51,29 +74,21 @@
     }
   }
 
-  .preview {
-    transform: scale(.3) translate(-50%, 100%);
-    transform-origin: left bottom;
-    z-index: 5;
-    display: flex;
+  .btn-preview {
+    width: px2rem(397);
+    height: px2rem(100);
+    background: url("../img/s2-1.png") no-repeat 0 0;
+    background-size: 100%;
+    border: none;
+    position: absolute;
+    top: px2rem(955);
+    left: px2rem(180);
+    opacity: 1;
+    transition: .1s;
+    display: none;
 
-    img {
-      width: px2rem(640);
-      height: px2rem(640);
-      display: inline-block;
-    }
-
-    &.show {
-      bottom: px2rem(15);
-      transform: scale(.3) translate(-50%, 0);
-      transition: bottom .3s, transform .3s;
-    }
-
-    &.show-all {
-      bottom: auto;
-      top: 0;
-      transform: scale(1) translate(-50%, 0);
-      transition: bottom .3s, transform .3s;
+    &.inactive {
+      opacity: 0;
     }
   }
 

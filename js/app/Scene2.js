@@ -9,13 +9,13 @@
             sizeY: GAME_PARAMS.sizeY,
         }, options)
 
-        this.$container        = $('#scene2')
-        this.$jigsaw           = this.$container.find('.jigsaw')
-        this.$previewContainer = this.$container.find('.preview')
-        this.$countdown        = this.$container.find('.countdown')
-        this.$preview          = this.$previewContainer.find('img')
-        this.$backdrop         = $('.backdrop')
-        this.unit = 'rem'
+        this.$container  = $('#scene2')
+        this.$jigsaw     = this.$container.find('.jigsaw')
+        this.$countdown  = this.$container.find('.countdown')
+        this.$btnPreview = this.$container.find('.btn-preview')
+        this.$backdrop   = $('.backdrop')
+        this.unit        = 'rem'
+        this.aniQueue    = new AniQueue()
 
         this.options.items.sort(function () {
             return Math.random() - 0.5
@@ -32,18 +32,30 @@
             var options = this.options
 
             that.$container.show()
+            that.aniQueue
+                .add('#scene2', 'slideInRight', .3)
+                .start()
+
             gameWatcher.on('game:replay', function () {
                 // TODO ZH 10/10/16
                 that.start()
             })
 
+            that.$btnPreview.on('touchstart', function (e) {
+                e.preventDefault()
+                that.$container.find('.preview').addClass('active')
+            })
+
+            that.$btnPreview.on('touchend', function () {
+                that.$container.find('.preview').removeClass('active')
+            })
 
             this.start()
-     /*       this.$backdrop.on('tap', function () {
-                $('.preview').removeClass('show-all')
-                that.$backdrop.removeClass('active')
-            })
-*/
+            /*       this.$backdrop.on('tap', function () {
+             $('.preview').removeClass('show-all')
+             that.$backdrop.removeClass('active')
+             })
+             */
             /*
              $preview.on('tap', function () {
              if ($preview.hasClass('show-all')) {
@@ -79,17 +91,19 @@
 
             var img    = new Image()
             img.onload = function () {
-                var size = that.zoomSize({
-                    w:img.naturalWidth,
-                    h:img.naturalHeight,
-                    max:660
+                var size       = that.zoomSize({
+                    w  : img.naturalWidth,
+                    h  : img.naturalHeight,
+                    max: 660
                 })
                 var width      = that.toRem(size.w)
                 var height     = that.toRem(size.h)
                 var unit       = that.unit
                 var $container = $('<div class="jigsaw-container"></div>')
 
-                $container.css({width: width + unit, height: height + unit})
+                $container
+                    .css({width: width + unit, height: height + unit})
+                    .append('<img class="preview" src="' + picUrl + '">')
 
                 for (var i = 0; i < sizeX; i++) {
                     var params = {
@@ -120,34 +134,39 @@
                 }
 
                 that.$jigsaw.empty().append($container)
-                that.$preview.attr('src', picUrl)
 
-                that.shuffle(function () {
-                    that.setCountdown()
-                })
+                setTimeout(function () {
+                    that.shuffle(function () {
+                        that.setCountdown()
+                        that.$btnPreview.show()
+                        that.aniQueue
+                            .add('.btn-preview', 'fadeIn', .3)
+                            .start()
+                    })
+                }, 1000)
             }
 
             img.src = picUrl + '_640x640.jpg_.webp'
         },
 
         zoomSize: function (options) {
-            var w = options.w
-            var h = options.h
-            var newW = options.newW
-            var newH = options.newH
-            var max = options.max
-            var result = {w:w,h:h}
+            var w      = options.w
+            var h      = options.h
+            var newW   = options.newW
+            var newH   = options.newH
+            var max    = options.max
+            var result = {w: w, h: h}
 
-            if(newW && newH) {
+            if (newW && newH) {
                 return result
             }
             else if (max) {
                 return w > h
-                    ? this.zoomSize({w:w, h:h, newW: max})
-                    : this.zoomSize({w:w, h:h, newH: max})
+                    ? this.zoomSize({w: w, h: h, newW: max})
+                    : this.zoomSize({w: w, h: h, newH: max})
             }
-            else if(newW) {
-                result.w =newW
+            else if (newW) {
+                result.w = newW
                 result.h = h * (newW / w)
             }
             else if (newH) {
@@ -189,7 +208,7 @@
         },
 
         move: function ($target, position, cb) {
-            if($target[0].moving) return
+            if ($target[0].moving) return
 
             $target[0].dragify.emit('disabled')
             $target[0].moving = true
@@ -202,15 +221,15 @@
             })
 
             $target.css({
-                top : this.toRem(position.top - ($target[0].offsetParent.offsetTop || 0)) +this.unit,
-                left: this.toRem(position.left - ($target[0].offsetParent.offsetLeft || 0)) +this.unit
+                top : this.toRem(position.top - ($target[0].offsetParent.offsetTop || 0)) + this.unit,
+                left: this.toRem(position.left - ($target[0].offsetParent.offsetLeft || 0)) + this.unit
             })
         },
 
         checkWin: function () {
-            var indexBox = []
-            var orderBox = []
-            var win = false
+            var indexBox   = []
+            var orderBox   = []
+            var win        = false
             var $container = $('.jigsaw-container')
             var $img       = $container.find('.img')
 
@@ -221,7 +240,7 @@
 
             win = indexBox.join() === orderBox.join()
 
-            if(this.timeout && !win) {
+            if (this.timeout && !win) {
                 this.countdown.destroy()
                 gameWatcher.emit('scene:fail')
             }
@@ -293,6 +312,8 @@
                     $img.each(function (k, elem) {
                         elem.dragify = new Dragify(elem)
                             .on('start', function (current) {
+                                that.$btnPreview.addClass('inactive')
+                                that.$jigsaw.css('overflow', 'visible')
                                 that.originPosition = current.getBoundingClientRect()
                             })
                             .on('move', function (current) {
@@ -305,6 +326,8 @@
                                 })
                             })
                             .on('end', function (current) {
+                                that.$btnPreview.removeClass('inactive')
+                                that.$jigsaw.css('overflow', 'hidden')
                                 that.move($(current), that.originPosition, function () {
                                     that.checkWin()
                                 })
@@ -312,7 +335,7 @@
                     })
 
                     cb && cb()
-                },500)
+                }, 500)
             })
         }
     }

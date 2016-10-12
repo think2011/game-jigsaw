@@ -16,7 +16,7 @@
             var aniQueue = new AniQueue()
 
             aniQueue
-                .add('#scene1 .man', 'bounceInDown',.7)
+                .add('#scene1 .man', 'bounceInDown', .7)
                 .delay(.4)
                 .add('#scene1 .title', 'bounceIn', 1)
                 .delay(.5)
@@ -24,19 +24,17 @@
                 .delay(.3)
                 .add('#scene1 .rule', 'rotateInDownRight', .3)
                 .hide()
-                .start(function () {
-                    console.log('done')
-                })
+                .start()
 
             this.$container.show()
 
             gameWatcher.on('game:play', function () {
                 aniQueue
-                    .add('#scene1', 'slideOutUp',.5)
+                    .add('#scene1', 'slideOutLeft', .5)
                     .start(function () {
                         that.destroy()
-                        new Scene2()
                     })
+                new Scene2()
             })
 
             this.$btnStart.on('tap', function () {
