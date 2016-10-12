@@ -37,12 +37,12 @@
                 .start()
 
             gameWatcher.on('game:replay', function () {
-                // TODO ZH 10/10/16
                 that.start()
             })
 
             that.$btnPreview.on('touchstart', function (e) {
                 e.preventDefault()
+                e.stopPropagation()
                 that.$container.find('.preview').addClass('active')
             })
 
@@ -50,26 +50,11 @@
                 that.$container.find('.preview').removeClass('active')
             })
 
-            this.start()
-            /*       this.$backdrop.on('tap', function () {
-             $('.preview').removeClass('show-all')
-             that.$backdrop.removeClass('active')
-             })
-             */
-            /*
-             $preview.on('tap', function () {
-             if ($preview.hasClass('show-all')) {
-             $preview.removeClass('show-all')
-             that.$backdrop.removeClass('active')
-             } else {
-             $preview.addClass('show-all')
-             that.$backdrop.addClass('active')
-             }
-             })*/
-
             document.addEventListener('touchmove', function (e) {
                 e.preventDefault()
             })
+
+            this.start()
         },
 
         toRem: function (px) {
@@ -146,7 +131,7 @@
                 }, 1000)
             }
 
-            img.src = picUrl + '_640x640.jpg_.webp'
+            img.src = picUrl + '_640x640.jpg'
         },
 
         zoomSize: function (options) {
