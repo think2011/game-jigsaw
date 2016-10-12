@@ -5,10 +5,9 @@
   background-size: 100%;
   display: none;
   overflow: hidden;
-  position: relative;
+  position: absolute;
   top: 0;
   left: 0;
-  x: px2rem(364);
 
   .countdown {
     width: px2rem(480);
