@@ -123,7 +123,7 @@
 
                 setTimeout(function () {
                     that.shuffle(function () {
-                        that.$btnPreview.show()
+                        that.$btnPreview.removeClass('inactive')
                         that.setCountdown()
                         that.$countdown
                             .css('visibility', 'visible')
