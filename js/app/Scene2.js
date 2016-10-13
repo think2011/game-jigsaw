@@ -119,11 +119,15 @@
                 }
 
                 that.$jigsaw.empty().append($container)
+                that.$countdown.html('')
 
                 setTimeout(function () {
                     that.shuffle(function () {
-                        that.setCountdown()
                         that.$btnPreview.show()
+                        that.setCountdown()
+                        that.$countdown
+                            .css('visibility', 'visible')
+                            .addClass('animated bounceInDown')
                         that.aniQueue
                             .add('.btn-preview', 'fadeIn', .3)
                             .start()
@@ -172,7 +176,7 @@
             this.timeout = false
             countdown
                 .on('countdown', function (time) {
-                    that.$countdown.html(time.s)
+                    that.$countdown.html('<span>' + time.m + '</span><span>' + time.s + '</span>')
                 })
                 .on('end', function () {
                     that.timeout = true
@@ -230,6 +234,7 @@
 
             if (this.timeout && !win) {
                 this.countdown.destroy()
+                this.$countdown.html('<span>00</span><span>00</span>')
                 gameWatcher.emit('scene:fail')
             }
             else if (win) {
@@ -279,6 +284,10 @@
 
                 // 打乱坐标
                 positions.sort(function () {
+                    return .5 - Math.random()
+                }).sort(function () {
+                    return .5 - Math.random()
+                }).sort(function () {
                     return .5 - Math.random()
                 })
 

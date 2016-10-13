@@ -53,7 +53,7 @@
         },
 
         off: function (type, fn) {
-            if(!type) {
+            if (!type) {
                 for (var p in this._events) {
                     if (!this._events.hasOwnProperty(p)) continue;
 

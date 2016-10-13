@@ -10,9 +10,35 @@
   left: 0;
 
   .countdown {
-    width: px2rem(480);
-    height: px2rem(130);
-    margin: px2rem(40) auto px2rem(35);
+    width: px2rem(486);
+    height: px2rem(162);
+    margin: 0 auto px2rem(40);
+    background: url("../img/s2-2.png") no-repeat 0 0;
+    background-size: 100%;
+    position: relative;
+    top: px2rem(42);
+    visibility: hidden;
+    animation-duration: .3s;
+
+    span {
+      font-family: monospace;
+      top: px2rem(35);
+      left: px2rem(226);
+      width: px2rem(75);
+      height: px2rem(61);
+      line-height: px2rem(61);
+      letter-spacing: px2rem(12);
+      display: inline-block;
+      position: absolute;
+      color: #333;
+    }
+
+    span:nth-child(1) {
+    }
+
+    span:nth-child(2) {
+      left: px2rem(326);
+    }
   }
 
   .jigsaw {
