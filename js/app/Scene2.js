@@ -98,9 +98,8 @@
                     }
 
                     for (var j = 0; j < sizeY; j++) {
-                        params.x = params.width * j
-                        params.y = params.height * i
-
+                        params.x  = params.width * j
+                        params.y  = params.height * i
                         var $html = $('<div class="img animated"></div>').css({
                             width              : params.width + unit,
                             height             : params.height + unit,
@@ -111,14 +110,19 @@
                             backgroundPositionX: -params.x + unit,
                             backgroundPositionY: -params.y + unit,
                             backgroundSize     : width + unit + ' ' + height + unit,
-                            padding            : '100%' // 解决奇怪的间隙问题
+                            padding            : '100%' // 处理rem引起的间隙问题
                         })
 
                         $container.append($html)
                     }
                 }
 
-                that.$jigsaw.empty().append($container)
+                // 生成索引
+                $container.find('.img').each(function (k, item) {
+                    $(item).data('order', k)
+                })
+
+                that.$jigsaw.empty().append($container.clone().addClass('shadow')).append($container)
                 that.$countdown.html('')
 
                 setTimeout(function () {
@@ -184,37 +188,26 @@
                 })
         },
 
-        swap: function ($elem, $target) {
-            var that           = this
-            var elemIndex      = $elem.data('index')
-            var targetIndex    = $target.data('index')
-            var targetPosition = {
-                top : $target[0].offsetTop,
-                left: $target[0].offsetLeft
-            }
-
-            this.move($target, that.originPosition)
-            this.originPosition = targetPosition
-            $elem.data('index', targetIndex)
-            $target.data('index', elemIndex)
+        getBoxElemByOrder: function (order) {
+            return $('.jigsaw-container.shadow').find('.img[data-order="' + order + '"]')
         },
 
-        move: function ($target, position, cb) {
-            if ($target[0].moving) return
+        getElemByIndex: function (index) {
+            return $('.jigsaw-container:not(.shadow)').find('.img[data-index="' + index + '"]')
+        },
 
-            $target[0].dragify.emit('disabled')
-            $target[0].moving = true
-            $target[0].classList.add('moving')
-            $target.one('webkitTransitionEnd', function () {
-                $target[0].moving = false
-                $target[0].classList.remove('moving')
-                $target[0].dragify.emit('enabled')
-                cb && cb()
-            })
+        swap: function () {
+            var that             = this
+            var $container       = $('.jigsaw-container:not(.shadow)')
+            var $containerShadow = $('.jigsaw-container.shadow')
 
-            $target.css({
-                top : this.toRem(position.top, this.$jigsaw.width()) + this.unit,
-                left: this.toRem(position.left, this.$jigsaw.width()) + this.unit
+            $containerShadow.find('.img').not(that.$dragElem[0].$box).each(function (k, item) {
+
+                if (collisionChecker(item).hit) {
+                    var $targetElem = that.getElemByIndex($(item).data('order'))
+
+                    $targetElem[0].swap(that.$dragElem)
+                }
             })
         },
 
@@ -222,7 +215,7 @@
             var indexBox   = []
             var orderBox   = []
             var win        = false
-            var $container = $('.jigsaw-container')
+            var $container = $('.jigsaw-container:not(.shadow)')
             var $img       = $container.find('.img')
 
             $img.each(function (k, v) {
@@ -246,12 +239,13 @@
         },
 
         shuffle: function (cb) {
-            var that       = this
-            var $container = $('.jigsaw-container')
-            var $img       = $container.find('.img')
-            var unit       = 'rem'
-            var positions  = []
-            var animations = [
+            var that             = this
+            var $container       = $('.jigsaw-container:not(.shadow)')
+            var $containerShadow = $('.jigsaw-container.shadow')
+            var $img             = $container.find('.img')
+            var unit             = 'rem'
+            var positions        = []
+            var animations       = [
                 'tada',
                 'wobble',
                 'swing',
@@ -265,10 +259,12 @@
             $img.each(function (k, v) {
                 var $v = $(v)
 
+                $v.css('padding', 0)
+                $containerShadow.find('.img').eq(k).css('padding', 0)
+
                 $v.removeClass()
                     .css({
-                        padding: 0,
-                        border : that.toRem(2) + unit + ' solid #fff',
+                        border: that.toRem(2) + unit + ' solid #fff'
                     })
                     .addClass('img animated ' + animations[0])
 
@@ -296,46 +292,77 @@
                     var $v       = $(v)
                     var position = positions.shift()
                     $v
-                        .data('order', k)
                         .data('index', position.index)
+                        .removeClass('animated ' + animations[0])
                         .css({
                             left: position.left,
                             top : position.top
                         })
                 })
 
-                // 打乱动画
                 setTimeout(function () {
-                    $img.each(function (k, elem) {
-                        elem.dragify = new Dragify(elem)
-                            .on('start', function (current) {
-                                that.$btnPreview.addClass('inactive')
-                                that.$jigsaw.css('overflow', 'visible')
-                                that.originPosition = {
-                                    top : current.offsetTop,
-                                    left: current.offsetLeft
-                                }
-                            })
-                            .on('move', function (current) {
-                                $container.find('.img').each(function (k, v) {
-                                    if (v === current || v.moving) return
-
-                                    if (collisionChecker(v).hit) {
-                                        that.swap($(current), $(v))
-                                    }
-                                })
-                            })
-                            .on('end', function (current) {
-                                that.$btnPreview.removeClass('inactive')
-                                that.$jigsaw.css('overflow', 'hidden')
-                                that.move($(current), that.originPosition, function () {
-                                    that.checkWin()
-                                })
-                            })
-                    })
-
+                    that.createDrag()
                     cb && cb()
                 }, 500)
+            })
+        },
+
+        createDrag: function () {
+            var that             = this
+            var $container       = $('.jigsaw-container:not(.shadow)')
+            var $containerShadow = $('.jigsaw-container.shadow')
+
+            $container.find('.img').each(function (k, elem) {
+                var theElem  = this
+                var $theElem = $(this)
+                var order    = $theElem.data('order')
+                var index    = $theElem.data('index')
+
+                // 绑定拖动
+                elem.dragify = new Dragify(theElem)
+                    .on('start', function (dragItem) {
+                        that.$btnPreview.addClass('inactive')
+                        that.$jigsaw.css('overflow', 'visible')
+                        that.$dragElem = $(dragItem)
+                    })
+                    .on('move', function (dragItem) {
+                        that.swap()
+                    })
+                    .on('end', function () {
+                        that.$btnPreview.removeClass('inactive')
+                        that.$jigsaw.css('overflow', 'hidden')
+                        that.$dragElem[0].move()
+                        that.checkWin()
+                    })
+
+
+                theElem.$box = $containerShadow.find('.img[data-order="' + index + '"]')
+
+                theElem.move = function (cb) {
+                    var $box = theElem.$box
+
+                    $theElem.one('webkitTransitionEnd', function () {
+                        cb && cb()
+                    })
+
+                    $theElem.css({
+                        top : $box[0].style.top,
+                        left: $box[0].style.left,
+                    })
+                }
+
+                theElem.swap = function ($targetElem) {
+                    var $theElemBox    = theElem.$box
+                    var $targetElemBox = $targetElem[0].$box
+                    var theElemIndex   = $theElem.data('index')
+                    var targetIndex    = $targetElem.data('index')
+
+                    $targetElem[0].$box = $theElemBox
+                    theElem.$box        = $targetElemBox
+                    theElem.move()
+                    $theElem.data('index', targetIndex)
+                    $targetElem.data('index', theElemIndex)
+                }
             })
         }
     }
