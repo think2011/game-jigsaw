@@ -1,4 +1,5 @@
 ;(function () {
+    //noinspection UnterminatedStatementJS
     var Class = function (options) {
         var GAME_PARAMS = window.GAME_PARAMS
 
@@ -13,7 +14,6 @@
         this.$jigsaw     = this.$container.find('.jigsaw')
         this.$countdown  = this.$container.find('.countdown')
         this.$btnPreview = this.$container.find('.btn-preview')
-        this.$backdrop   = $('.backdrop')
         this.unit        = 'rem'
         this.aniQueue    = new AniQueue()
 
@@ -196,21 +196,6 @@
             return $('.jigsaw-container:not(.shadow)').find('.img[data-index="' + index + '"]')
         },
 
-        swap: function () {
-            var that             = this
-            var $container       = $('.jigsaw-container:not(.shadow)')
-            var $containerShadow = $('.jigsaw-container.shadow')
-
-            $containerShadow.find('.img').not(that.$dragElem[0].$box).each(function (k, item) {
-
-                if (collisionChecker(item).hit) {
-                    var $targetElem = that.getElemByIndex($(item).data('order'))
-
-                    $targetElem[0].swap(that.$dragElem)
-                }
-            })
-        },
-
         checkWin: function () {
             var indexBox   = []
             var orderBox   = []
@@ -325,20 +310,20 @@
                         that.$dragElem = $(dragItem)
                     })
                     .on('move', function (dragItem) {
-                        that.swap()
+                        that.$dragElem[0].collisionChecker()
                     })
                     .on('end', function () {
                         that.$btnPreview.removeClass('inactive')
-                        that.$dragElem[0].move()
-                        that.checkWin()
+                        that.$dragElem[0].move(function () {
+                            that.checkWin()
+                        })
                     })
-
 
                 theElem.$box = that.getBoxElemByOrder(index)
 
+                // 移动位置
                 theElem.move = function (cb) {
                     var $box = theElem.$box
-
                     $theElem.one('webkitTransitionEnd', function () {
                         cb && cb()
                     })
@@ -349,17 +334,45 @@
                     })
                 }
 
-                theElem.swap = function ($targetElem) {
+                // 交换位置
+                theElem.swap = function ($targetElem, direction) {
+                    if (theElem.moving) return
+
+                    theElem.moving     = true
+                    var node           = theElem
                     var $theElemBox    = theElem.$box
                     var $targetElemBox = $targetElem[0].$box
                     var theElemIndex   = $theElem.data('index')
                     var targetIndex    = $targetElem.data('index')
 
-                    $targetElem[0].$box = $theElemBox
-                    theElem.$box        = $targetElemBox
-                    theElem.move()
                     $theElem.data('index', targetIndex)
                     $targetElem.data('index', theElemIndex)
+                    $targetElem[0].$box = $theElemBox
+                    theElem.$box        = $targetElemBox
+                    theElem.move(function () {
+                        theElem.moving = false
+                    })
+                }
+
+                // 碰撞检测
+                theElem.collisionChecker = function () {
+                    $theElem.siblings().each(function (k, item) {
+                        if (!collisionChecker(item).hit) return
+
+                        var direction         = null
+                        var dragBoxPosition   = that.$dragElem[0].$box.position()
+                        var targetBoxPosition = item.$box.position()
+
+                        if (dragBoxPosition.top < targetBoxPosition.top) {
+                            direction = 'down'
+                        } else if (dragBoxPosition.top > targetBoxPosition.top) {
+                            direction = 'up'
+                        } else {
+                            direction = 'normal'
+                        }
+
+                        item.swap(that.$dragElem, direction)
+                    })
                 }
             })
         }
