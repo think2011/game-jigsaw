@@ -322,7 +322,6 @@
                 elem.dragify = new Dragify(theElem)
                     .on('start', function (dragItem) {
                         that.$btnPreview.addClass('inactive')
-                        that.$jigsaw.css('overflow', 'visible')
                         that.$dragElem = $(dragItem)
                     })
                     .on('move', function (dragItem) {
@@ -330,7 +329,6 @@
                     })
                     .on('end', function () {
                         that.$btnPreview.removeClass('inactive')
-                        that.$jigsaw.css('overflow', 'hidden')
                         that.$dragElem[0].move()
                         that.checkWin()
                     })
