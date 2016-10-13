@@ -334,7 +334,7 @@
                     })
 
 
-                theElem.$box = $containerShadow.find('.img[data-order="' + index + '"]')
+                theElem.$box = that.getBoxElemByOrder(index)
 
                 theElem.move = function (cb) {
                     var $box = theElem.$box
