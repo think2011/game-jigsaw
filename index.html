@@ -7,6 +7,7 @@
 </head>
 <body>
 
+
 <div id="scene1">
     <div class="man"></div>
     <div class="title"></div>
@@ -27,6 +28,110 @@
 <script src="js/lib/touch.js"></script>
 <link rel="stylesheet" href="js/lib/dialog/game-dialog.css">
 <script src="js/lib/dialog/game-dialog.js"></script>
+
+
+<div class="lottery-layer swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <div class="panel">
+                <div class="badge badge-game-fail"></div>
+                <h3>挑战失败, 再玩一次</h3>
+
+                <div class="actions">
+                    <button data-type="replay" class="btn btn-default">再玩一次</button>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="panel">
+                <div class="badge badge-game"></div>
+                <h3>获得抽奖机会: <span>X1</span></h3>
+
+                <div class="actions">
+                    <button data-type="game" class="btn btn-primary">立即抽奖</button>
+                    <button data-type="replay" class="btn btn-default">再玩一次</button>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="panel">
+                <div class="badge badge-collect"></div>
+                <h3>收藏宝贝获得抽奖机会</h3>
+
+                <div class="actions">
+                    <button data-type="collect" class="btn btn-primary">收藏抽奖</button>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="panel">
+                <div class="badge badge-shopping"></div>
+                <h3>加购物车获得抽奖机会</h3>
+
+                <div class="actions">
+                    <button data-type="shopping" class="btn btn-primary">加购抽奖</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swiper-pagination"></div>
+    <div class="tips">滑动获得抽奖机会</div>
+
+    <div class="goods-list">
+        <h1 class="title">
+            <a href="javascript:" class="close">×</a>
+
+            加入购物车
+        </h1>
+        <h3 class="sub-title">收藏任意宝贝, 可获得抽奖机会</h3>
+        <ul>
+            <li>
+                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
+                <div class="title">
+                    商品商品商品商品商品商品商品商品商品
+                </div>
+                <button class="btn btn-primary">加入购物车</button>
+            </li>
+            <li>
+                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
+                <div class="title">
+                    商品商品商品商品商品商品商品商品商品
+                </div>
+                <button class="btn btn-primary">加入购物车</button>
+            </li>
+            <li>
+                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
+                <div class="title">
+                    商品商品商品商品商品商品商品商品商品
+                </div>
+                <button class="btn btn-primary">加入购物车</button>
+            </li>
+            <li>
+                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
+                <div class="title">
+                    商品商品商品商品商品商品商品商品商品
+                </div>
+                <button class="btn btn-primary">加入购物车</button>
+            </li>
+            <li>
+                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
+                <div class="title">
+                    商品商品商品商品商品商品商品商品商品
+                </div>
+                <button class="btn btn-primary">加入购物车</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- lottery -->
+<link rel="stylesheet" href="js/lib/swiper/css/swiper.css">
+<script src="js/lib/swiper/js/swiper.jquery.js"></script>
+
+<link rel="stylesheet" href="js/lib/lottery-layer/lottery-layer.css">
+<script src="js/lib/lottery-layer/lottery-layer.js"></script>
+
 
 <script src="js/lib/Watcher.js"></script>
 <script src="js/tools/tools.js"></script>
