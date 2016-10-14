@@ -65,7 +65,7 @@
             var options = this.options
 
             options.items.push(options.items.shift())
-            this.render(options.items[0], options.sizeX, options.sizeY)
+            this.render(options.items[0].picUrl, options.sizeX, options.sizeY)
         },
 
         render: function (picUrl, sizeX, sizeY) {
