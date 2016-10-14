@@ -87,7 +87,11 @@
                 var $container = $('<div class="jigsaw-container"></div>')
 
                 $container
-                    .css({width: width + unit, height: height + unit})
+                    .css({
+                        width    : width + unit,
+                        height   : height + unit,
+                        marginTop: (that.toRem(705) - height) / 2 + unit
+                    })
                     .append('<img class="preview" src="' + picUrl + '">')
 
                 for (var i = 0; i < sizeX; i++) {

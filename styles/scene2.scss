@@ -46,11 +46,10 @@
     height: px2rem(705);
     padding-left: px2rem(12);
     display: flex;
-    align-items: center;
   }
 
   .jigsaw-container {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     position: absolute;
     -webkit-appearance: none;
@@ -101,7 +100,7 @@
       opacity: 0.7;
       transition: opacity .3s ease-in-out, transform .3s ease;
       z-index: 19911125;
-      transform: scale(.85) rotate(-6deg);
+      transform: scale(.8) rotate(-5deg);
     }
 
     &.moving {
