@@ -29,7 +29,13 @@
             var finallyCb = function () {
                 if (isAniEnd && isExecuteEnd) {
                     elemTask.forEach(function (item) {
-                        $(item.params[0]).removeClass(item.params[1]).removeClass('animated').css('animationDuration', '')
+                        $(item.params[0]).removeClass(item.params[1]).removeClass('animated').css({
+                            '-webkit-animation-duration': '',
+                            '-moz-animation-duration'   : '',
+                            '-ms-animation-duration'    : '',
+                            '-o-animation-duration'     : '',
+                            'animation-duration'        : '',
+                        })
                     })
 
                     cb && cb()
@@ -84,7 +90,15 @@
                     var $elem = $(params[0])
 
                     $elem.show().addClass(params[1]).addClass('animated')
-                    if (params[2] !== undefined) $elem.css('animationDuration', params[2] + 's')
+                    if (params[2] !== undefined) {
+                        $elem.css({
+                            '-webkit-animation-duration': params[2] + 's',
+                            '-moz-animation-duration'   : params[2] + 's',
+                            '-ms-animation-duration'    : params[2] + 's',
+                            '-o-animation-duration'     : params[2] + 's',
+                            'animation-duration'        : params[2] + 's',
+                        })
+                    }
 
                     _cb()
                     break;
