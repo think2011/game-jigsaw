@@ -88,9 +88,10 @@
 
                 $container
                     .css({
-                        width    : width + unit,
-                        height   : height + unit,
-                        marginTop: (that.toRem(705) - height) / 2 + unit
+                        width     : width + unit,
+                        height    : height + unit,
+                        marginTop : (that.toRem(705) - height) / 2 + unit,
+                        marginLeft: (that.toRem(750 + 12) - width) / 2 + unit
                     })
                     .append('<img class="preview" src="' + picUrl + '">')
 
@@ -314,6 +315,7 @@
                         that.$dragElem = $(dragItem)
                     })
                     .on('move', function (dragItem) {
+                        window.event.preventDefault()
                         that.$dragElem[0].collisionChecker()
                     })
                     .on('end', function () {

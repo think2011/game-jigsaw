@@ -21,30 +21,34 @@
     animation-duration: .3s;
 
     span {
-      font-family: monospace;
+      font-family: "Arial";
       top: px2rem(35);
-      left: px2rem(226);
-      width: px2rem(75);
+      left: px2rem(222);
+      width: px2rem(78);
       height: px2rem(61);
       line-height: px2rem(61);
-      letter-spacing: px2rem(12);
       display: inline-block;
+      font-size: px2rem(50);
       position: absolute;
       color: #333;
+      opacity: .7;
+      text-align: center;
+      letter-spacing: px2rem(12);
+      padding-left: px2rem(5);
+      white-space: nowrap;
     }
 
     span:nth-child(1) {
     }
 
     span:nth-child(2) {
-      left: px2rem(326);
+      left: px2rem(322);
     }
   }
 
   .jigsaw {
     width: 100%;
     height: px2rem(705);
-    padding-left: px2rem(12);
     display: flex;
   }
 
@@ -55,7 +59,6 @@
     -webkit-appearance: none;
     -webkit-backface-visibility: hidden;
     -webkit-transform-style: preserve-3d;
-    left: px2rem(52);
 
     &.shadow {
       visibility: hidden;

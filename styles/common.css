@@ -81,39 +81,45 @@
 }
 
 #scene2 .countdown span {
-    font-family: monospace;
+    font-family: "Arial";
     top: .74667rem;
-    left: 4.82133rem;
-    width: 1.6rem;
+    left: 4.736rem;
+    width: 1.664rem;
     height: 1.30133rem;
     line-height: 1.30133rem;
-    letter-spacing: .256rem;
     display: inline-block;
+    font-size: 1.06667rem;
     position: absolute;
-    color: #333
+    color: #333;
+    opacity: .7;
+    text-align: center;
+    letter-spacing: .256rem;
+    padding-left: .10667rem;
+    white-space: nowrap
 }
 
 #scene2 .countdown span:nth-child(2) {
-    left: 6.95467rem
+    left: 6.86933rem
 }
 
 #scene2 .jigsaw {
     width: 100%;
     height: 15.04rem;
-    padding-left: .256rem;
     display: -webkit-box;
+    display: -ms-flexbox;
     display: flex
 }
 
 #scene2 .jigsaw-container {
     display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     position: absolute;
     -webkit-appearance: none;
     -webkit-backface-visibility: hidden;
-    -webkit-transform-style: preserve-3d;
-    left: 1.10933rem
+    -webkit-transform-style: preserve-3d
 }
 
 #scene2 .jigsaw-container.shadow {
@@ -153,6 +159,7 @@
 }
 
 #scene2 .img {
+    -ms-flex-negative: 0;
     flex-shrink: 0;
     position: absolute;
     top: 0;
