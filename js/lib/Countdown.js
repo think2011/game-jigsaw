@@ -83,6 +83,13 @@
 
         this.countdownMs = countdownMs || 1000
         this.end         = new Date(date)
+        this.time        = {
+            total: 0,
+            d    : '00',
+            h    : '00',
+            ms   : '00',
+            s    : '00'
+        }
 
         this.timer = null
         this.init()
@@ -103,10 +110,11 @@
                 }, that.countdownMs)
             } else {
                 that.emit('countdown', {
-                    d : '00',
-                    h : '00',
-                    ms: '00',
-                    s : '00'
+                    total: 0,
+                    d    : '00',
+                    h    : '00',
+                    ms   : '00',
+                    s    : '00'
                 })
                 that.emit('end')
             }
@@ -124,7 +132,7 @@
             var minutes = (distance % _hour) / _minute
             var seconds = (distance % _minute) / _second
 
-            return {
+            this.time = {
                 total: distance,
                 d    : that._padNumber(Math.floor(days), 2),
                 h    : that._padNumber(Math.floor(hours), 2),
@@ -132,6 +140,8 @@
                 s    : that._padNumber(Math.ceil(seconds), 2),
                 ms   : that._padNumber(Math.ceil(('' + distance).substr(0, 2)), 2)
             }
+
+            return this.time
         },
 
         _padNumber: function (num, fill) {
@@ -153,10 +163,11 @@
 
         destroy: function () {
             this.emit('countdown', {
-                d : '00',
-                h : '00',
-                ms: '00',
-                s : '00'
+                total: 0,
+                d    : '00',
+                h    : '00',
+                ms   : '00',
+                s    : '00'
             })
             this.end = 0
             clearTimeout(this.timer)

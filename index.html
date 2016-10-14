@@ -74,8 +74,8 @@
             .on('show:rule', function () {
                 console.log('rule')
             })
-            .on('scene:win', function () {
-                console.log('win')
+            .on('scene:win', function (time) {
+                console.log('win', time)
                 alert('win')
             })
             .on('scene:fail', function () {

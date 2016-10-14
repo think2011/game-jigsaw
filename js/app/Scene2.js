@@ -222,7 +222,7 @@
             }
             else if (win) {
                 this.countdown.pause()
-                gameWatcher.emit('scene:win')
+                gameWatcher.emit('scene:win', this.countdown.time)
             }
 
             return win
