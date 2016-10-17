@@ -30,100 +30,12 @@
 <script src="js/lib/dialog/game-dialog.js"></script>
 
 
-<div class="lottery-layer swiper-container">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide">
-            <div class="panel">
-                <div class="badge badge-game-fail"></div>
-                <h3>挑战失败, 再玩一次</h3>
-
-                <div class="actions">
-                    <button data-type="replay" class="btn btn-default">再玩一次</button>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-slide">
-            <div class="panel">
-                <div class="badge badge-game"></div>
-                <h3>获得抽奖机会: <span>X1</span></h3>
-
-                <div class="actions">
-                    <button data-type="game" class="btn btn-primary">立即抽奖</button>
-                    <button data-type="replay" class="btn btn-default">再玩一次</button>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-slide">
-            <div class="panel">
-                <div class="badge badge-collect"></div>
-                <h3>收藏宝贝获得抽奖机会</h3>
-
-                <div class="actions">
-                    <button data-type="collect" class="btn btn-primary">收藏抽奖</button>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-slide">
-            <div class="panel">
-                <div class="badge badge-shopping"></div>
-                <h3>加购物车获得抽奖机会</h3>
-
-                <div class="actions">
-                    <button data-type="shopping" class="btn btn-primary">加购抽奖</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="swiper-pagination"></div>
-    <div class="tips">滑动获得抽奖机会</div>
-
-    <div class="goods-list">
-        <h1 class="title">
-            <a href="javascript:" class="close">×</a>
-
-            加入购物车
-        </h1>
-        <h3 class="sub-title">收藏任意宝贝, 可获得抽奖机会</h3>
-        <ul>
-            <li>
-                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
-                <div class="title">
-                    商品商品商品商品商品商品商品商品商品
-                </div>
-                <button class="btn btn-primary">加入购物车</button>
-            </li>
-            <li>
-                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
-                <div class="title">
-                    商品商品商品商品商品商品商品商品商品
-                </div>
-                <button class="btn btn-primary">加入购物车</button>
-            </li>
-            <li>
-                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
-                <div class="title">
-                    商品商品商品商品商品商品商品商品商品
-                </div>
-                <button class="btn btn-primary">加入购物车</button>
-            </li>
-            <li>
-                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
-                <div class="title">
-                    商品商品商品商品商品商品商品商品商品
-                </div>
-                <button class="btn btn-primary">加入购物车</button>
-            </li>
-            <li>
-                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1707PNXXXXXbcXXXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg">
-                <div class="title">
-                    商品商品商品商品商品商品商品商品商品
-                </div>
-                <button class="btn btn-primary">加入购物车</button>
-            </li>
-        </ul>
-    </div>
-</div>
+<script src="js/lib/Watcher.js"></script>
+<script src="js/tools/tools.js"></script>
+<script src="js/lib/collisionChecker.js"></script>
+<script src="js/lib/Dragify.js"></script>
+<script src="js/lib/Countdown.js"></script>
+<script src="js/lib/ani-queue.js"></script>
 
 <!-- lottery -->
 <link rel="stylesheet" href="js/lib/swiper/css/swiper.css">
@@ -133,18 +45,27 @@
 <script src="js/lib/lottery-layer/lottery-layer.js"></script>
 
 
-<script src="js/lib/Watcher.js"></script>
-<script src="js/tools/tools.js"></script>
-<script src="js/lib/collisionChecker.js"></script>
-<script src="js/lib/Dragify.js"></script>
-<script src="js/lib/Countdown.js"></script>
-<script src="js/lib/ani-queue.js"></script>
-
 <script>
     window.GAME_PARAMS = {
         items: [
-            {picUrl: '//img.alicdn.com/bao/uploaded/i2/TB1B0PbNpXXXXbrXVXXXXXXXXXX_!!0-item_pic.jpg'},
-            {picUrl: '//img.alicdn.com/tps/TB1MSEbMVXXXXa6XFXXXXXXXXXX-360-280.jpg'},
+            {
+                numIid      : 538178642523,
+                picUrl      : "https://img.alicdn.com/bao/uploaded/i4/TB1.S.nNXXXXXXjXFXXXXXXXXXX_!!0-item_pic.jpg",
+                price       : "346.00",
+                soldQuantity: 0,
+                title       : "测试商品圣高男 男士休闲皮 男真皮英伦潮流套脚商务休闲子",
+                used        : true,
+                itemId      : 538178642523
+            },
+            {
+                numIid      : 538260952779,
+                picUrl      : "https://img.alicdn.com/bao/uploaded/i2/TB1ZAAkNXXXXXbOXFXXXXXXXXXX_!!0-item_pic.jpg",
+                price       : "246.00",
+                soldQuantity: 0,
+                title       : "测试商品吉 男女通用系带拼色运动 网布防滑耐磨小道公路跑步",
+                used        : true,
+                itemId      : 538260952779
+            }
         ],
         time : 6000000,
         sizeX: 3,
@@ -187,6 +108,45 @@
                 console.log('fail')
                 gameWatcher.emit('game:replay')
                 alert('fail')
+            })
+
+    var lotteryLayer = new LotteryLayer({
+        shopping: {
+            items     : window.GAME_PARAMS.items,
+            addedItems: [{
+                numIid      : 538260952779,
+                picUrl      : "https://img.alicdn.com/bao/uploaded/i2/TB1ZAAkNXXXXXbOXFXXXXXXXXXX_!!0-item_pic.jpg",
+                price       : "246.00",
+                soldQuantity: 0,
+                title       : "测试商品吉 男女通用系带拼色运动 网布防滑耐磨小道公路跑步",
+                used        : true,
+                itemId      : 538260952779
+            }]
+        },
+        collect : {
+            items     : window.GAME_PARAMS.items,
+            addedItems: []
+        },
+    })
+
+    //    lotteryLayer.emit('add:draw', 'game', 2)
+    //    lotteryLayer.emit('add:draw', 'shopping')
+    lotteryLayer.emit('show:win')
+    //    lotteryLayer.emit('show:fail')
+    //    lotteryLayer.emit('task:done', {numIid: 538260952779})
+
+    lotteryLayer
+            .on('click:shopping', function (item) {
+                lotteryLayer.emit('task:done', 'shopping', item)
+            })
+            .on('click:collect', function (item) {
+                lotteryLayer.emit('task:done', 'collect', item)
+            })
+            .on('click:replay', function () {
+
+            })
+            .on('click:draw', function () {
+
             })
 </script>
 <script src="js/app/Scene1.js"></script>

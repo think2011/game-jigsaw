@@ -4,6 +4,10 @@ $designWidth: 750;
   @return $px*320/$designWidth/20 + rem;
 }
 
+.hide {
+  display: none !important;
+}
+
 .lottery-layer {
   position: absolute;
   width: 100%;
@@ -11,7 +15,7 @@ $designWidth: 750;
   top: 0;
   left: 0;
   transition: .3s;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.7);
   * {
     box-sizing: border-box;
   }
@@ -103,6 +107,11 @@ $designWidth: 750;
       color: #666;
       background: #FBFCFB;
 
+      &[disabled] {
+        background: rgb(238, 238, 238);
+        color: rgb(204, 204, 204);
+      }
+
       &-primary {
         color: #fff;
         background: #754AEE;
@@ -172,7 +181,7 @@ $designWidth: 750;
           text-overflow: ellipsis;
           overflow: hidden;
           padding: 0 px2rem(10);
-          margin: 0 auto;
+          margin: px2rem(15) auto;
           position: relative;
 
         }
@@ -193,6 +202,11 @@ $designWidth: 750;
           color: #fff;
           background: #FF3C3D;
           margin: 0 auto px2rem(15);
+
+          &[data-disabled=true] {
+            background: rgb(221, 221, 221);
+            color: rgb(156, 156, 156);
+          }
         }
       }
     }

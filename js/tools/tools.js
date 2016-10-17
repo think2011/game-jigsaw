@@ -52,17 +52,17 @@
     }
 
     /**
-     * 替换字符串 !{}
+     * 替换字符串 ${}
      * @param obj
      * @returns {String}
      * @example
-     * '我是!{str}'.render({str: '测试'});
+     * '我是${str}'.render({str: '测试'});
      */
     String.prototype.render = function (obj) {
         var str = this, reg;
 
         Object.keys(obj).forEach(function (v) {
-            reg = new RegExp('\\!\\{' + v + '\\}', 'g');
+            reg = new RegExp('\\$\\{' + v + '\\}', 'g');
             str = str.replace(reg, obj[v]);
         });
 
