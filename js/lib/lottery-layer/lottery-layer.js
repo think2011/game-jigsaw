@@ -127,20 +127,9 @@
                         that.hide()
                         break;
 
-                    case 'collect':
-                    case 'shopping':
-                        if ($(event.target).data('disabled') === false) {
-                            that.emit('click:' + targetType, $(event.target)[0].item)
-                        }
-                        break;
-
                     case 'show:collect':
                     case 'show:shopping':
                         that.showTask(targetType.split(':')[1])
-                        break;
-
-                    case 'close:goodsList':
-                        that.hideTask()
                         break;
                     default:
                     //
@@ -253,7 +242,26 @@
                 $html.find('ul').append($item)
             })
 
-            that.$container.append($html)
+            $html.on('tap', function (event) {
+                var targetType = $(event.target).data('type')
+                switch (targetType) {
+                    case 'collect':
+                    case 'shopping':
+                        if ($(event.target).data('disabled') === false) {
+                            that.emit('click:' + targetType, $(event.target)[0].item)
+                        }
+                        break;
+
+                    case 'close:goodsList':
+                        that.hideTask()
+                        break;
+
+                    default:
+                    //
+                }
+            })
+
+            $('body').append($html)
             that.swiper.lockSwipes()
         },
 
