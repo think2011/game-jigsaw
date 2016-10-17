@@ -4,7 +4,7 @@
 
     /**
      * 抽奖&游戏结果
-     * @param options
+     * @param options object
      * @param options[key] 任务类型, 目前有 shopping, collect
      * @param options[key].items 需要做任务的items
      * @param options[key].addedItems 已完成任务的items
@@ -77,6 +77,12 @@
         init: function () {
             var that = this
 
+            for (var p in that.options) {
+                if (!that.options.hasOwnProperty(p)) continue;
+
+                that.options[p] = JSON.parse(JSON.stringify(that.options[p]))
+            }
+
             that.on('show:win', function () {
                 that.show('game')
             })
@@ -96,9 +102,12 @@
             })
 
             that.on('task:done', function (type, item) {
-                that.$goodsListInstance.find('[data-id="' + item.numIid + '"]')
-                    .data('disabled', true)
-                    .text(that.taskConfig[type].taskBtnDone)
+                var $item = that.$goodsListInstance.find('[data-id="' + item.numIid + '"]')
+
+                $item.data('disabled', true)
+                $item.text(that.taskConfig[type].taskBtnDone)
+                $item[0].item._isDone = true
+                that.renderDraw()
             })
         },
 
@@ -112,8 +121,10 @@
 
                 switch (targetType) {
                     case 'draw':
-                    case 'replay':
                         that.emit('click:' + targetType)
+                        break;
+                    case 'replay':
+                        that.hide()
                         break;
 
                     case 'collect':
@@ -137,7 +148,6 @@
             })
         },
 
-
         renderDraw: function () {
             var that = this
 
@@ -158,9 +168,9 @@
                     // 检查已做任务情况
                     if (p === 'shopping' || p === 'collect') {
                         that.options[p].items.forEach(function (item) {
-                            item._isDone = that.options[p].addedItems.some(function (addedItem) {
-                                return item.numIid === addedItem.numIid
-                            })
+                            item._isDone = item._isDone || that.options[p].addedItems.some(function (addedItem) {
+                                    return item.numIid === addedItem.numIid
+                                })
                         })
 
                         var allDone = that.options[p].items.every(function (item) {
@@ -168,10 +178,10 @@
                         })
 
                         if (allDone) {
-                            $slide.find('.btn[data-type="' + p + '"]').prop('disabled', true)
+                            $slide.find('.btn[data-type="show:' + p + '"]').prop('disabled', true)
                         } else {
                             item.num > 0 || $slide.find('h3').html(item.$chance)
-                            $slide.find('.btn[data-type="' + p + '"]').prop('disabled', false)
+                            $slide.find('.btn[data-type="show:' + p + '"]').prop('disabled', false)
                         }
                     }
                 }
