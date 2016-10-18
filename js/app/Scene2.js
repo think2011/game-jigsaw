@@ -50,10 +50,6 @@
                 that.$container.find('.preview').removeClass('active')
             })
 
-            document.addEventListener('touchmove', function (e) {
-                e.preventDefault()
-            })
-
             this.start()
         },
 
