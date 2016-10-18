@@ -159,13 +159,13 @@ $designWidth: 750;
   }
 
   ul {
-    width: px2rem(632);
     max-height: px2rem(700);
-    display: flex;
+    display: inline-flex;
     flex-flow: row wrap;
     overflow: auto;
     overflow-scrolling: touch;
     -webkit-overflow-scrolling: touch;
+    justify-content: space-between;
 
     p {
       font-size: px2rem(20);
@@ -176,7 +176,7 @@ $designWidth: 750;
       text-align: center;
       border: 1px solid #ccc;
       padding: 0;
-      margin: 0 px2rem(28) px2rem(20) 0;
+      margin: 0 0 px2rem(20) 0;
       background: #eee;
 
       .title {
