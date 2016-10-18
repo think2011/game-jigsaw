@@ -110,20 +110,10 @@
 
     var lotteryLayer = new LotteryLayer({
         shopping: {
-            items     : window.GAME_PARAMS.items,
-            addedItems: [{
-                numIid      : 538260952779,
-                picUrl      : "https://img.alicdn.com/bao/uploaded/i2/TB1ZAAkNXXXXXbOXFXXXXXXXXXX_!!0-item_pic.jpg",
-                price       : "246.00",
-                soldQuantity: 0,
-                title       : "测试商品吉 男女通用系带拼色运动 网布防滑耐磨小道公路跑步",
-                used        : true,
-                itemId      : 538260952779
-            }]
+            items: window.GAME_PARAMS.items
         },
         collect : {
-            items     : window.GAME_PARAMS.items,
-            addedItems: []
+            items: window.GAME_PARAMS.items
         },
     })
 
@@ -134,18 +124,18 @@
     //    lotteryLayer.emit('task:done', {numIid: 538260952779})
     lotteryLayer.emit('show:fail')
     lotteryLayer
-            .on('click:shopping', function (item) {
-                lotteryLayer.emit('task:done', 'shopping', item)
+            .on('click:task', function (type) {
+//                $.showLoading()
+                setTimeout(function () {
+//                    $.hideLoading()
+                    lotteryLayer.emit('done:task', type, [{numIid: 11}])
+                    lotteryLayer.emit('show:task', type)
+                }, 100)
             })
-            .on('click:collect', function (item) {
-                lotteryLayer.emit('task:done', 'collect', item)
-            })
-            .on('click:replay', function () {
-                gameWatcher.emit('game:replay')
-
-            })
-            .on('click:draw', function () {
-
+            .on('do:task', function (type, item) {
+                console.log(item)
+                lotteryLayer.emit('add:draw', type)
+                lotteryLayer.emit('done:task', type, [item])
             })
 </script>
 <script src="js/app/Scene1.js"></script>

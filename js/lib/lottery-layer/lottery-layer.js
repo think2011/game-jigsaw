@@ -1,5 +1,5 @@
 ;(function () {
-    var html = '<script id="lottery-layer" type="text/lottery-html">\n    <div class="lottery-layer swiper-container">\n        <div class="swiper-wrapper">\n            <div class="swiper-slide game-fail">\n                <div class="panel">\n                    <div class="badge badge-game-fail"></div>\n                    <h3>挑战失败, 再玩一次</h3>\n\n                    <div class="actions">\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide game">\n                <div class="panel">\n                    <div class="badge badge-game"></div>\n                    <h3>获得抽奖机会: <span>X1</span></h3>\n\n                    <div class="actions">\n                        <button data-type="draw" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide collect">\n                <div class="panel">\n                    <div class="badge badge-collect"></div>\n                    <h3>收藏宝贝获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="show:collect" class="btn btn-primary">收藏抽奖</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide shopping">\n                <div class="panel">\n                    <div class="badge badge-shopping"></div>\n                    <h3>加购物车获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="show:shopping" class="btn btn-primary">加购抽奖</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class="swiper-pagination"></div>\n        <div class="tips">滑动获得抽奖机会</div>\n\n        <!-- 宝贝列表 -->\n        <div class="goods-list">\n            <h1 class="title">\n                <a href="javascript:" data-type="close:goodsList" class="close">×</a>\n                ${title}\n            </h1>\n\n            <h3 class="sub-title">${subTitle}</h3>\n            <ul>\n                <li>\n                    <img data-src="${img}_270x270.jpg">\n                    <div class="title">\n                        ${title}\n                    </div>\n                    <button data-type="${task}"\n                            data-id="${id}"\n                            data-disabled="${disabled}"\n                            class="btn btn-primary">${taskBtn}\n                    </button>\n                </li>\n            </ul>\n        </div>\n    </div>\n\n</script>'
+    var html = '<script id="lottery-layer" type="text/lottery-html">\n    <div class="lottery-layer swiper-container">\n        <div class="swiper-wrapper">\n            <div class="swiper-slide game-fail">\n                <div class="panel">\n                    <div class="badge badge-game-fail"></div>\n                    <h3>挑战失败, 再玩一次</h3>\n\n                    <div class="actions">\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide game">\n                <div class="panel">\n                    <div class="badge badge-game"></div>\n                    <h3>获得抽奖机会: <span>X1</span></h3>\n\n                    <div class="actions">\n                        <button data-type="draw" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide collect">\n                <div class="panel">\n                    <div class="badge badge-collect"></div>\n                    <h3>收藏宝贝获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="click:collect" class="btn btn-primary">收藏抽奖</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide shopping">\n                <div class="panel">\n                    <div class="badge badge-shopping"></div>\n                    <h3>加购物车获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="click:shopping" class="btn btn-primary">加购抽奖</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class="swiper-pagination"></div>\n        <div class="tips">滑动获得抽奖机会</div>\n\n        <!-- 宝贝列表 -->\n        <div class="goods-list">\n            <h1 class="title">\n                <a href="javascript:" data-type="close:goodsList" class="close">×</a>\n                ${title}\n            </h1>\n\n            <h3 class="sub-title">${subTitle}</h3>\n            <ul>\n                <li>\n                    <img data-src="${img}_270x270.jpg">\n                    <div class="title">\n                        ${title}\n                    </div>\n                    <button data-type="${task}"\n                            data-id="${id}"\n                            data-disabled="${disabled}"\n                            class="btn btn-primary">${taskBtn}\n                    </button>\n                </li>\n            </ul>\n        </div>\n    </div>\n\n</script>'
     $('body').append(html)
 
     /**
@@ -7,10 +7,8 @@
      * @param options object
      * @param options[key] 任务类型, 目前有 shopping, collect
      * @param options[key].items 需要做任务的items
-     * @param options[key].addedItems 已完成任务的items
      *
-     * @event on click:shopping(item) 加购任务
-     * @event on click:collect(item) 收藏任务
+     * @event on click:task(type) 点击了某任务
      * @event on click:replay 再玩一次
      * @event on click:click:draw 抽奖
      *
@@ -18,13 +16,14 @@
      * @event emit reduce:draw(type, [time=1]) 扣除抽奖次数, type:任务类型, time:次数
      * @event emit show:win 游戏成功
      * @event emit show:fail 游戏失败
-     * @event emit task:done(type, item) 完成某个任务  type:任务类型, item:{numIid: xxxx}
+     * @event emit show:task(type) 弹出某任务
+     * @event emit do:task(type) 做了某任务
+     * @event emit done:task(type, items) 完成某个任务  type:任务类型, items:[{numIid: xxxx}]
      *
      * @example
      * new LotteryLayer({
         shopping: {
-            items     : window.GAME_PARAMS.items,
-            addedItems: window.GAME_PARAMS.addedItems
+            items     : window.GAME_PARAMS.items
         })
      *
      * @constructor
@@ -80,7 +79,9 @@
             for (var p in that.options) {
                 if (!that.options.hasOwnProperty(p)) continue;
 
-                that.options[p] = JSON.parse(JSON.stringify(that.options[p]))
+                // 生成保存已做任务的items
+                that.options[p].addedItems = []
+                that.options[p]            = JSON.parse(JSON.stringify(that.options[p]))
             }
 
             that.on('show:win', function () {
@@ -89,6 +90,10 @@
 
             that.on('show:fail', function () {
                 that.show('game-fail')
+            })
+
+            that.on('show:task', function (type) {
+                that.showTask(type)
             })
 
             that.on('add:draw', function (type, time) {
@@ -101,12 +106,25 @@
                 that.renderDraw()
             })
 
-            that.on('task:done', function (type, item) {
-                var $item = that.$goodsListInstance.find('[data-id="' + item.numIid + '"]')
+            that.on('done:task', function (type, items) {
+                items.forEach(function (item) {
+                    if (that.$goodsListInstance) {
+                        var $item = that.$goodsListInstance.find('[data-id="' + item.numIid + '"]')
 
-                $item.data('disabled', true)
-                $item.text(that.taskConfig[type].taskBtnDone)
-                $item[0].item._isDone = true
+                        // 同步UI
+                        $item.data('disabled', true)
+                        $item.text(that.taskConfig[type].taskBtnDone)
+                        $item[0].item._isDone = true
+                    }
+
+                    // 保存已完成
+                    var isExist = that.options[type].addedItems.some(function (aItem) {
+                        return aItem.numIid === item.numIid
+                    })
+
+                    if (!isExist) that.options[type].addedItems.push(item)
+                })
+
                 that.renderDraw()
             })
         },
@@ -128,9 +146,9 @@
                         that.hide()
                         break;
 
-                    case 'show:collect':
-                    case 'show:shopping':
-                        that.showTask(targetType.split(':')[1])
+                    case 'click:collect':
+                    case 'click:shopping':
+                        that.emit('click:task', targetType.split(':')[1])
                         break;
                     default:
                     //
@@ -249,7 +267,7 @@
                     case 'collect':
                     case 'shopping':
                         if ($(event.target).data('disabled') === false) {
-                            that.emit('click:' + targetType, $(event.target)[0].item)
+                            that.emit('do:task', targetType, $(event.target)[0].item)
                         }
                         break;
 
