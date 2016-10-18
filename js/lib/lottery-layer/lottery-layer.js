@@ -10,7 +10,7 @@
      *
      * @event on click:task(type) 点击了某任务
      * @event on click:replay 再玩一次
-     * @event on click:click:draw 抽奖
+     * @event on click:draw 抽奖
      *
      * @event emit add:draw(type, [time=1]) 增加抽奖次数, type:任务类型, time:次数
      * @event emit reduce:draw(type, [time=1]) 扣除抽奖次数, type:任务类型, time:次数
