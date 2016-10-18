@@ -64,6 +64,15 @@
                 title       : "测试商品吉 男女通用系带拼色运动 网布防滑耐磨小道公路跑步",
                 used        : true,
                 itemId      : 538260952779
+            },
+            {
+                numIid      : 538260952779,
+                picUrl      : "https://img.alicdn.com/bao/uploaded/i2/TB1ZAAkNXXXXXbOXFXXXXXXXXXX_!!0-item_pic.jpg",
+                price       : "246.00",
+                soldQuantity: 0,
+                title       : "测试商品吉 男女通用系带拼色运动 网布防滑耐磨小道公路跑步",
+                used        : true,
+                itemId      : 538260952779
             }
         ],
         time : 6000000,
@@ -136,6 +145,9 @@
                 console.log(item)
                 lotteryLayer.emit('add:draw', type)
                 lotteryLayer.emit('done:task', type, [item])
+            })
+            .on('click:draw', function (type) {
+                console.log(type)
             })
 </script>
 <script src="js/app/Scene1.js"></script>
