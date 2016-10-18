@@ -124,6 +124,7 @@
                         that.emit('click:' + targetType)
                         break;
                     case 'replay':
+                        that.emit('click:' + targetType)
                         that.hide()
                         break;
 
