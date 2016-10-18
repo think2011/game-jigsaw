@@ -228,7 +228,7 @@
             that.swiper.on('sliderMove', function () {
                 that.sliderMove = true
             })
-            that.swiper.on('slideChangeEnd', function () {
+            that.swiper.on('onTransitionEnd', function () {
                 that.sliderMove = false
             })
         },
