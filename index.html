@@ -132,7 +132,7 @@
 
     //    lotteryLayer.emit('show:fail')
     //    lotteryLayer.emit('task:done', {numIid: 538260952779})
-
+    lotteryLayer.emit('show:fail')
     lotteryLayer
             .on('click:shopping', function (item) {
                 lotteryLayer.emit('task:done', 'shopping', item)
@@ -141,6 +141,7 @@
                 lotteryLayer.emit('task:done', 'collect', item)
             })
             .on('click:replay', function () {
+                gameWatcher.emit('game:replay')
 
             })
             .on('click:draw', function () {

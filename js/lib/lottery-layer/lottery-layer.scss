@@ -136,16 +136,19 @@ $designWidth: 750;
     font-size: px2rem(36);
     text-align: center;
     position: relative;
+    margin: px2rem(20) 0;
     padding-bottom: px2rem(15);
     border-bottom: 1px solid #ddd;
 
     a {
+      width: px2rem(55);
+      height: px2rem(40);
+      line-height: px2rem(40);
       position: absolute;
       right: px2rem(5);
       top: 0;
       color: #777;
       font-size: px2rem(55);
-      line-height: px2rem(28);
       text-decoration: none;
     }
   }
