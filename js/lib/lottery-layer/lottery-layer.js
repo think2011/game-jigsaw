@@ -213,6 +213,10 @@
             }
             $slide.filter('.' + slideClass).prependTo($wrapper)
 
+            if ($container.find('.swiper-slide').length < 2) {
+                that.hideTips()
+            }
+
             that.renderDraw()
             that.initEvent($container)
             $('body').append($container)
@@ -233,6 +237,16 @@
             that.swiper.on('onTransitionEnd', function () {
                 that.sliderMove = false
             })
+        },
+
+        showTips: function () {
+            if (this.$container.find('.swiper-slide').length > 1) {
+                this.$container.find('.swiper-pagination, .tips').show()
+            }
+        },
+
+        hideTips: function () {
+            this.$container.find('.swiper-pagination, .tips').hide()
         },
 
         hide: function () {
@@ -283,11 +297,13 @@
             })
 
             $('body').append($html)
+            that.hideTips()
             that.swiper.lockSwipes()
         },
 
         hideTask: function () {
             this.$goodsListInstance.remove()
+            this.showTips()
             this.swiper.unlockSwipes()
         }
     })
