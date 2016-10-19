@@ -1,9 +1,10 @@
 ;(function () {
-    var html = '<script id="lottery-layer" type="text/lottery-html">\n    <div class="lottery-layer swiper-container">\n        <div class="swiper-wrapper">\n            <div class="swiper-slide game-fail">\n                <div class="panel">\n                    <div class="badge badge-game-fail"></div>\n                    <h3>挑战失败, 再玩一次</h3>\n\n                    <div class="actions">\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide game">\n                <div class="panel">\n                    <div class="badge badge-game"></div>\n                    <h3>获得抽奖机会: <span>X1</span></h3>\n\n                    <div class="actions">\n                        <button data-type="draw" data-draw-type="game" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide collect">\n                <div class="panel">\n                    <div class="badge badge-collect"></div>\n                    <h3>收藏宝贝获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" data-draw-type="collect" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="click:collect" class="btn btn-primary">收藏抽奖</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide shopping">\n                <div class="panel">\n                    <div class="badge badge-shopping"></div>\n                    <h3>加购物车获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" data-draw-type="shopping" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="click:shopping" class="btn btn-primary">加购抽奖</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class="swiper-pagination"></div>\n        <div class="tips">滑动获得抽奖机会</div>\n\n        <!-- 宝贝列表 -->\n        <div class="goods-list">\n            <h1 class="title">\n                <a href="javascript:" data-type="close:goodsList" class="close">×</a>\n                ${title}\n            </h1>\n\n            <h3 class="sub-title">${subTitle}</h3>\n            <ul>\n                <li>\n                    <img data-src="${img}_270x270.jpg">\n                    <div class="title">\n                        ${title}\n                    </div>\n                    <button data-type="${task}"\n                            data-id="${id}"\n                            data-disabled="${disabled}"\n                            class="btn btn-primary">${taskBtn}\n                    </button>\n                </li>\n            </ul>\n        </div>\n    </div>\n\n</script>'
+    var html = '<script id="lottery-layer" type="text/lottery-html">\n    <div class="lottery-layer swiper-container">\n        <div class="swiper-wrapper">\n            <div class="swiper-slide game-fail">\n                <div class="panel">\n                    <div class="badge badge-game-fail"></div>\n                    <h3>挑战失败, 再玩一次</h3>\n\n                    <div class="actions">\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                        <a href="//shop${shopId}.m.taobao.com" class="btn btn-primary to-shopping">进店逛逛</a>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide game">\n                <div class="panel">\n                    <div class="badge badge-game"></div>\n                    <h3>获得抽奖机会: <span>X1</span></h3>\n\n                    <div class="actions">\n                        <button data-type="draw" data-draw-type="game" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="replay" class="btn btn-default">再玩一次</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide collect">\n                <div class="panel">\n                    <div class="badge badge-collect"></div>\n                    <h3>收藏宝贝获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" data-draw-type="collect" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="click:collect" class="btn btn-primary">收藏抽奖</button>\n                    </div>\n                </div>\n            </div>\n            <div class="swiper-slide shopping">\n                <div class="panel">\n                    <div class="badge badge-shopping"></div>\n                    <h3>加购物车获得抽奖机会</h3>\n\n                    <div class="actions">\n                        <button data-type="draw" data-draw-type="shopping" class="btn btn-primary">立即抽奖</button>\n                        <button data-type="click:shopping" class="btn btn-primary">加购抽奖</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class="swiper-pagination"></div>\n        <div class="tips">滑动获得抽奖机会</div>\n\n        <!-- 宝贝列表 -->\n        <div class="goods-list">\n            <h1 class="title">\n                <a href="javascript:" data-type="close:goodsList" class="close">×</a>\n                ${title}\n            </h1>\n\n            <h3 class="sub-title">${subTitle}</h3>\n            <ul>\n                <li>\n                    <img data-src="${img}_270x270.jpg">\n                    <div class="title">\n                        ${title}\n                    </div>\n                    <button data-type="${task}"\n                            data-id="${id}"\n                            data-disabled="${disabled}"\n                            class="btn btn-primary">${taskBtn}\n                    </button>\n                </li>\n            </ul>\n        </div>\n    </div>\n\n\n\n</script>'
     $('body').append(html)
 
     /**
      * 抽奖&游戏结果
+     * @param shopId number 店铺ID
      * @param options object
      * @param options[key] 任务类型, 目前有 shopping, collect
      * @param options[key].items 需要做任务的items
@@ -28,9 +29,10 @@
      *
      * @constructor
      */
-    var LotteryLayer = function (options) {
+    var LotteryLayer = function (shopId, options) {
         Watcher.call(this)
 
+        this.shopId     = shopId
         this.options    = options
         this.drawTotal  = {
             game    : {
@@ -198,7 +200,7 @@
 
         show: function (slideClass) {
             var that       = this
-            var $container = this.$container = $($('script#lottery-layer').html())
+            var $container = this.$container = $($('script#lottery-layer').html().render({shopId: that.shopId}))
             var $wrapper = $container.find('.swiper-wrapper')
             var $slide   = this.$slide = $wrapper.find('.swiper-slide').remove()
             var $goodsList = this.$goodsList = $container.find('.goods-list').remove()
@@ -207,7 +209,7 @@
             for (var p in that.options) {
                 if (!that.options.hasOwnProperty(p)) continue;
 
-                $slide.filter('.' + p).prependTo($wrapper)
+                that.options[p].items.length && $slide.filter('.' + p).prependTo($wrapper)
             }
             $slide.filter('.' + slideClass).prependTo($wrapper)
 

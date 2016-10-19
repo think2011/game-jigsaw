@@ -117,19 +117,19 @@
                 alert('fail')
             })
 
-    var lotteryLayer = new LotteryLayer({
+    var lotteryLayer = new LotteryLayer('112345123',{
         shopping: {
-            items: window.GAME_PARAMS.items
+            items: []
         },
         collect : {
-            items: window.GAME_PARAMS.items
+            items: [{id: 132}]
         },
     })
 
     //    lotteryLayer.emit('add:draw', 'game', 2)
     //    lotteryLayer.emit('add:draw', 'shopping')
 
-    //    lotteryLayer.emit('show:fail')
+    //    lotteryLayer.emit('show:win')
     //    lotteryLayer.emit('task:done', {numIid: 538260952779})
     lotteryLayer.emit('show:fail')
     lotteryLayer
